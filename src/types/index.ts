@@ -1,3 +1,10 @@
+export interface WordFamily {
+  noun?: string;
+  verb?: string;
+  adj?: string;
+  adv?: string;
+}
+
 export interface WordItem {
   id: string;
   word: string;
@@ -6,6 +13,10 @@ export interface WordItem {
   meaning: string;
   example: string;
   category: string;
+  wordFamily?: WordFamily;
+  collocations?: string[];
+  synonyms?: string[];
+  antonyms?: string[];
 }
 
 export type WordStatus = 'normal' | 'focus' | 'mastered';

@@ -278,19 +278,90 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
               </button>
             </div>
 
-            {/* Meaning & Example */}
-            <div className="space-y-2.5 my-auto py-2">
-              <div className="bg-white dark:bg-slate-800/90 p-3 rounded-2xl shadow-xs border border-indigo-100 dark:border-slate-700/60">
+            {/* Meaning & Deep Learning Insights */}
+            <div className="space-y-2 my-auto py-1.5 overflow-y-auto max-h-[280px] no-scrollbar">
+              {/* Thai Meaning */}
+              <div className="bg-white dark:bg-slate-800/90 p-2.5 sm:p-3 rounded-2xl shadow-xs border border-indigo-100 dark:border-slate-700/60">
                 <span className="text-[10px] font-bold text-indigo-500 block mb-0.5">ความหมายภาษาไทย:</span>
                 <p className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100 leading-snug break-words">
                   {currentWord?.meaning}
                 </p>
               </div>
 
+              {/* Word Family Tree */}
+              {currentWord?.wordFamily && (
+                <div className="bg-indigo-50/80 dark:bg-slate-800/70 p-2.5 rounded-xl border border-indigo-200/60 dark:border-indigo-900/40 text-left text-xs space-y-1">
+                  <span className="text-[10px] font-extrabold text-indigo-600 dark:text-indigo-400 block uppercase tracking-wider">
+                    🌳 ตระกูลคำ (Word Family):
+                  </span>
+                  <div className="flex flex-wrap gap-1.5 text-[11px]">
+                    {currentWord.wordFamily.noun && (
+                      <span className="bg-white dark:bg-slate-900 px-2 py-0.5 rounded-md font-semibold text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700">
+                        <span className="text-indigo-500 font-bold">n.</span> {currentWord.wordFamily.noun}
+                      </span>
+                    )}
+                    {currentWord.wordFamily.verb && (
+                      <span className="bg-white dark:bg-slate-900 px-2 py-0.5 rounded-md font-semibold text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700">
+                        <span className="text-emerald-500 font-bold">v.</span> {currentWord.wordFamily.verb}
+                      </span>
+                    )}
+                    {currentWord.wordFamily.adj && (
+                      <span className="bg-white dark:bg-slate-900 px-2 py-0.5 rounded-md font-semibold text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700">
+                        <span className="text-amber-500 font-bold">adj.</span> {currentWord.wordFamily.adj}
+                      </span>
+                    )}
+                    {currentWord.wordFamily.adv && (
+                      <span className="bg-white dark:bg-slate-900 px-2 py-0.5 rounded-md font-semibold text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700">
+                        <span className="text-purple-500 font-bold">adv.</span> {currentWord.wordFamily.adv}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Collocations */}
+              {currentWord?.collocations && currentWord.collocations.length > 0 && (
+                <div className="bg-amber-50/70 dark:bg-slate-800/70 p-2.5 rounded-xl border border-amber-200/60 dark:border-amber-900/40 text-left text-xs">
+                  <span className="text-[10px] font-extrabold text-amber-700 dark:text-amber-400 block uppercase tracking-wider mb-1">
+                    🧩 คำคู่ติดที่ใช้บ่อย (Collocations):
+                  </span>
+                  <div className="flex flex-wrap gap-1 text-[11px]">
+                    {currentWord.collocations.map((col, idx) => (
+                      <span
+                        key={idx}
+                        className="bg-white dark:bg-slate-900 px-2 py-0.5 rounded-md font-medium text-slate-700 dark:text-slate-200 border border-amber-200/60 dark:border-slate-700"
+                      >
+                        {col}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Synonyms & Antonyms */}
+              {((currentWord?.synonyms && currentWord.synonyms.length > 0) ||
+                (currentWord?.antonyms && currentWord.antonyms.length > 0)) && (
+                <div className="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-xl border border-slate-200/60 dark:border-slate-700/50 flex flex-wrap items-center gap-2 text-[10px] text-left">
+                  {currentWord.synonyms && currentWord.synonyms.length > 0 && (
+                    <span className="text-slate-600 dark:text-slate-400">
+                      <strong className="text-emerald-600 dark:text-emerald-400">คำเหมือน (Syn):</strong>{' '}
+                      {currentWord.synonyms.join(', ')}
+                    </span>
+                  )}
+                  {currentWord.antonyms && currentWord.antonyms.length > 0 && (
+                    <span className="text-slate-600 dark:text-slate-400">
+                      <strong className="text-rose-600 dark:text-rose-400">คำตรงข้าม (Ant):</strong>{' '}
+                      {currentWord.antonyms.join(', ')}
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {/* Contextual Real Example */}
               {currentWord?.example && (
-                <div className="bg-white/80 dark:bg-slate-800/50 p-2.5 sm:p-3 rounded-2xl border border-slate-200/80 dark:border-slate-700/50">
+                <div className="bg-white/80 dark:bg-slate-800/50 p-2.5 rounded-2xl border border-slate-200/80 dark:border-slate-700/50">
                   <span className="text-[10px] font-bold text-slate-400 block mb-0.5">ตัวอย่างประโยคบริบทจริง:</span>
-                  <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 italic leading-relaxed break-words">
+                  <p className="text-xs text-slate-700 dark:text-slate-300 italic leading-relaxed break-words">
                     "{currentWord.example}"
                   </p>
                 </div>
@@ -298,7 +369,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
             </div>
 
             {/* Back tap hint */}
-            <div className="text-center text-[10px] text-slate-400 whitespace-nowrap">
+            <div className="text-center text-[10px] text-slate-400 whitespace-nowrap pt-1">
               แตะเพื่อพลิกกลับด้านหน้า
             </div>
           </div>

@@ -16,7 +16,10 @@ export const CAMBRIDGE_B1_VOCABULARY: VocabularyItem[] = [
     "ipa": "/əˈbrɔːd/",
     "meaning": "ในต่างประเทศ",
     "example": "Studying abroad allows you to learn about diverse global cultures.",
-    "category": "Travel & Transport"
+    "category": "Travel & Transport",
+    "collocations": ["travel abroad", "study abroad", "live abroad"],
+    "synonyms": ["overseas", "internationally"],
+    "antonyms": ["at home", "domestically"]
   },
   {
     "id": "b1_002",
@@ -25,7 +28,16 @@ export const CAMBRIDGE_B1_VOCABULARY: VocabularyItem[] = [
     "ipa": "/əkˈsept/",
     "meaning": "ยอมรับ",
     "example": "She happily accepted the university's admission offer.",
-    "category": "General"
+    "category": "General",
+    "wordFamily": {
+      "noun": "acceptance",
+      "verb": "accept",
+      "adj": "acceptable",
+      "adv": "acceptably"
+    },
+    "collocations": ["accept an offer", "accept responsibility", "accept advice"],
+    "synonyms": ["agree to", "receive", "admit"],
+    "antonyms": ["reject", "refuse", "decline"]
   },
   {
     "id": "b1_003",
@@ -34,7 +46,14 @@ export const CAMBRIDGE_B1_VOCABULARY: VocabularyItem[] = [
     "ipa": "/əˌkɒməˈdeɪʃn/",
     "meaning": "ที่พักอาศัย, โรงแรม",
     "example": "The package tour includes luxury beachfront hotel accommodation.",
-    "category": "Travel & Transport"
+    "category": "Travel & Transport",
+    "wordFamily": {
+      "noun": "accommodation",
+      "verb": "accommodate",
+      "adj": "accommodating"
+    },
+    "collocations": ["book accommodation", "provide accommodation", "temporary accommodation"],
+    "synonyms": ["housing", "lodging", "shelter"]
   },
   {
     "id": "b1_004",
@@ -43,7 +62,15 @@ export const CAMBRIDGE_B1_VOCABULARY: VocabularyItem[] = [
     "ipa": "/ˈækjərət/",
     "meaning": "แม่นยำ, ถูกต้อง",
     "example": "The digital thermometer provides extremely accurate body temperature readings.",
-    "category": "Descriptive Words"
+    "category": "Descriptive Words",
+    "wordFamily": {
+      "noun": "accuracy",
+      "adj": "accurate",
+      "adv": "accurately"
+    },
+    "collocations": ["accurate measurement", "accurate description", "highly accurate"],
+    "synonyms": ["precise", "correct", "exact"],
+    "antonyms": ["inaccurate", "wrong", "imprecise"]
   },
   {
     "id": "b1_005",
@@ -52,7 +79,15 @@ export const CAMBRIDGE_B1_VOCABULARY: VocabularyItem[] = [
     "ipa": "/əˈtʃiːv/",
     "meaning": "บรรลุเป้าหมาย, ทำสำเร็จ",
     "example": "She worked tirelessly to achieve her academic goals.",
-    "category": "Daily Life"
+    "category": "Daily Life",
+    "wordFamily": {
+      "noun": "achievement",
+      "verb": "achieve",
+      "adj": "achievable"
+    },
+    "collocations": ["achieve a goal", "achieve success", "achieve results"],
+    "synonyms": ["accomplish", "attain", "reach"],
+    "antonyms": ["fail", "give up"]
   },
   {
     "id": "b1_006",
