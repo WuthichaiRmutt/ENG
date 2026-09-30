@@ -1,6 +1,7 @@
-import React from 'react';
-import { Flame, Cloud, AlertCircle, Sun, Moon, Sparkles, Check } from 'lucide-react';
+import React, { useState } from 'react';
+import { Flame, Cloud, AlertCircle, Sun, Moon, Sparkles, Check, Volume2, VolumeX, Zap } from 'lucide-react';
 import { UserProfile } from '../types';
+import { soundFx } from '../lib/soundFx';
 
 interface HeaderProps {
   profile: UserProfile;
@@ -19,7 +20,13 @@ export const Header: React.FC<HeaderProps> = ({
   isDark,
   onToggleDark,
 }) => {
+  const [soundOn, setSoundOn] = useState(() => soundFx.isEnabled());
   const goalProgress = Math.min(100, Math.round((profile.studiedTodayCount / profile.dailyGoal) * 100));
+
+  const handleToggleSound = () => {
+    const newState = soundFx.toggle();
+    setSoundOn(newState);
+  };
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800/80 transition-colors">
@@ -60,6 +67,25 @@ export const Header: React.FC<HeaderProps> = ({
             <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500 animate-pulse shrink-0" />
             <span>{profile.streakDays}ว.</span>
           </div>
+
+          {/* Player Level Chip */}
+          <div className="flex items-center gap-1 bg-violet-50 dark:bg-violet-950/40 border border-violet-200/80 dark:border-violet-800/60 text-violet-700 dark:text-violet-300 px-2 py-1 rounded-full text-[11px] font-black shadow-xs whitespace-nowrap">
+            <Zap className="w-3.5 h-3.5 text-violet-500 fill-violet-500 shrink-0" />
+            <span>Lv.{profile.level || 1}</span>
+          </div>
+
+          {/* Sound Toggle */}
+          <button
+            onClick={handleToggleSound}
+            className={`p-1.5 rounded-full border transition-all shrink-0 ${
+              soundOn
+                ? 'bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-800'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-400 border-slate-200 dark:border-slate-700'
+            }`}
+            title={soundOn ? 'ปิดเสียงเอฟเฟกต์' : 'เปิดเสียงเอฟเฟกต์'}
+          >
+            {soundOn ? <Volume2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <VolumeX className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+          </button>
 
           {/* Supabase Status Button */}
           <button

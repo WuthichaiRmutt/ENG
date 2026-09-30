@@ -9,6 +9,8 @@ import {
   Layers,
   Brain,
   TrendingUp,
+  Gamepad2,
+  Zap,
 } from 'lucide-react';
 import { ActiveTab, UserProfile } from '../types';
 
@@ -29,20 +31,30 @@ interface DashboardViewProps {
 export const DashboardView: React.FC<DashboardViewProps> = ({ stats, profile, onNavigateTab }) => {
   return (
     <div className="space-y-4 sm:space-y-5 pb-6">
-      {/* 🚀 Deployment Verification Banner */}
-      <div className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white p-3 sm:p-3.5 rounded-2xl shadow-md flex items-center justify-between gap-2 border border-emerald-400/40">
+      {/* 🚀 New Features Hub Banner */}
+      <div
+        onClick={() => onNavigateTab('games')}
+        className="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white p-3 sm:p-3.5 rounded-2xl shadow-lg shadow-orange-500/20 flex items-center justify-between gap-2 cursor-pointer active:scale-98 transition-transform"
+      >
         <div className="flex items-center gap-2.5 min-w-0">
-          <span className="flex h-2.5 w-2.5 relative shrink-0">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-white"></span>
-          </span>
-          <span className="text-xs font-bold leading-tight truncate">
-            ✨ อัปเดตระบบ V2.0 (ปรับแก้ตัดคำมือถือแล้ว)
-          </span>
+          <div className="w-8 h-8 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shrink-0 text-base">
+            🎮
+          </div>
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs font-black leading-tight text-white truncate">
+                เปิดตัวโหมดใหม่! ศูนย์รวมเกมคำศัพท์
+              </span>
+              <span className="text-[9px] font-black bg-white text-orange-600 px-1.5 py-0.5 rounded-full uppercase shrink-0">
+                NEW ✨
+              </span>
+            </div>
+            <p className="text-[10px] text-orange-100 truncate mt-0.5">
+              Speed Match • ฟังเสียงอ่าน • สะสม XP เลเวลอัป
+            </p>
+          </div>
         </div>
-        <span className="text-[10px] font-extrabold bg-white/20 backdrop-blur-sm px-2 py-0.5 rounded-full shrink-0">
-          VERIFIED
-        </span>
+        <ArrowRight className="w-4 h-4 shrink-0 text-white/90" />
       </div>
 
       {/* Hero Learning Card */}
@@ -81,11 +93,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ stats, profile, on
             </button>
 
             <button
-              onClick={() => onNavigateTab('quiz')}
+              onClick={() => onNavigateTab('games')}
               className="bg-indigo-500/40 hover:bg-indigo-500/60 border border-white/30 text-white font-bold text-xs sm:text-sm py-2.5 px-2.5 sm:px-3 rounded-xl transition flex items-center justify-center gap-1.5 active:scale-95"
             >
-              <Brain className="w-4 h-4 shrink-0" />
-              <span className="whitespace-nowrap">ทำแบบทดสอบ</span>
+              <Gamepad2 className="w-4 h-4 shrink-0" />
+              <span className="whitespace-nowrap">เล่นเกม & ควิซ</span>
             </button>
           </div>
         </div>

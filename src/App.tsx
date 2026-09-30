@@ -5,7 +5,7 @@ import { Header } from './components/Header';
 import { BottomNav } from './components/BottomNav';
 import { DashboardView } from './components/DashboardView';
 import { FlashcardsView } from './components/FlashcardsView';
-import { QuizView } from './components/QuizView';
+import { GamesHubView } from './components/GamesHubView';
 import { WordBankView } from './components/WordBankView';
 import { CloudSyncModal } from './components/CloudSyncModal';
 import { getStoredSupabaseConfig } from './lib/supabaseClient';
@@ -46,6 +46,7 @@ export function App() {
     isCloudSyncing,
     setWordStatus,
     recordResult,
+    addXP,
     syncWithSupabase,
     setCloudStatus,
   } = useVocabStore();
@@ -88,13 +89,21 @@ export function App() {
           <FlashcardsView
             words={words}
             progressMap={progressMap}
-            onRecordResult={recordResult}
+            onRecordResult={(id, correct) => {
+              recordResult(id, correct);
+              if (correct) addXP(3);
+            }}
             initialFilter={flashcardFilter}
           />
         )}
 
-        {activeTab === 'quiz' && (
-          <QuizView words={words} onRecordResult={recordResult} />
+        {(activeTab === 'games' || (activeTab as string) === 'quiz') && (
+          <GamesHubView
+            words={words}
+            profile={profile}
+            onAddXP={addXP}
+            onRecordResult={recordResult}
+          />
         )}
 
         {activeTab === 'wordbank' && (

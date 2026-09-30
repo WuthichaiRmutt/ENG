@@ -4508,5 +4508,185 @@ export const CAMBRIDGE_B1_VOCABULARY: VocabularyItem[] = [
     "meaning": "หาตำแหน่ง, ตั้งอยู่",
     "example": "GPS navigation systems help drivers locate remote countryside addresses.",
     "category": "General"
+  },
+  {
+    "id": "b1_501",
+    "word": "look forward to",
+    "pos": "phr.v.",
+    "ipa": "/lʊk ˈfɔːwəd tuː/",
+    "meaning": "ตั้งตารอคอยอย่างใจจดใจจ่อ",
+    "example": "I really look forward to hearing your wonderful test results soon.",
+    "category": "Phrasal Verbs"
+  },
+  {
+    "id": "b1_502",
+    "word": "give up",
+    "pos": "phr.v.",
+    "ipa": "/ɡɪv ʌp/",
+    "meaning": "ยอมแพ้, ละทิ้งความพยายาม",
+    "example": "Never give up when learning English; daily consistency brings mastery.",
+    "category": "Phrasal Verbs"
+  },
+  {
+    "id": "b1_503",
+    "word": "find out",
+    "pos": "phr.v.",
+    "ipa": "/faɪnd aʊt/",
+    "meaning": "ค้นพบ, หาคำตอบจนรู้ความจริง",
+    "example": "We can find out the train timetable by checking the mobile app.",
+    "category": "Phrasal Verbs"
+  },
+  {
+    "id": "b1_504",
+    "word": "carry on",
+    "pos": "phr.v.",
+    "ipa": "/ˈkæri ɒn/",
+    "meaning": "ดำเนินต่อไป, ทำต่อไปไม่หยุด",
+    "example": "Please carry on with your reading while the teacher checks homework.",
+    "category": "Phrasal Verbs"
+  },
+  {
+    "id": "b1_505",
+    "word": "come across",
+    "pos": "phr.v.",
+    "ipa": "/kʌm əˈkrɒs/",
+    "meaning": "พบเจอโดยบังเอิญ",
+    "example": "I came across an interesting article about Cambridge PET exams.",
+    "category": "Phrasal Verbs"
+  },
+  {
+    "id": "b1_506",
+    "word": "get along with",
+    "pos": "phr.v.",
+    "ipa": "/ɡet əˈlɒŋ wɪð/",
+    "meaning": "เข้ากันได้ดีกับผู้อื่น",
+    "example": "She gets along with all her classmates and international roommates.",
+    "category": "Phrasal Verbs"
+  },
+  {
+    "id": "b1_507",
+    "word": "look after",
+    "pos": "phr.v.",
+    "ipa": "/lʊk ˈɑːftə/",
+    "meaning": "ดูแลเอาใจใส่, คอยคุ้มครอง",
+    "example": "Can you please look after my dog while I travel abroad for a week?",
+    "category": "Phrasal Verbs"
+  },
+  {
+    "id": "b1_508",
+    "word": "put off",
+    "pos": "phr.v.",
+    "ipa": "/pʊt ɒf/",
+    "meaning": "เลื่อนออกไปก่อน, ผลัดวันประกันพรุ่ง",
+    "example": "Never put off until tomorrow what you can easily study today.",
+    "category": "Phrasal Verbs"
+  },
+  {
+    "id": "b1_509",
+    "word": "run out of",
+    "pos": "phr.v.",
+    "ipa": "/rʌn aʊt əv/",
+    "meaning": "หมดเกลี้ยง, ขาดแคลน",
+    "example": "We ran out of petrol just before reaching the downtown gas station.",
+    "category": "Phrasal Verbs"
+  },
+  {
+    "id": "b1_510",
+    "word": "work out",
+    "pos": "phr.v.",
+    "ipa": "/wɜːk aʊt/",
+    "meaning": "ออกกำลังกาย, แก้ไขปัญหาได้สำเร็จ",
+    "example": "Regular physical exercise works out both your body and mind effectively.",
+    "category": "Phrasal Verbs"
+  },
+  {
+    "id": "b1_511",
+    "word": "break down",
+    "pos": "phr.v.",
+    "ipa": "/breɪk daʊn/",
+    "meaning": "เครื่องยนต์เสีย, พัง, สติแตก",
+    "example": "Our family car broke down on the expressway during heavy monsoon rain.",
+    "category": "Phrasal Verbs"
+  },
+  {
+    "id": "b1_512",
+    "word": "catch up with",
+    "pos": "phr.v.",
+    "ipa": "/kætʃ ʌp wɪð/",
+    "meaning": "ไล่ตามทัน, พบปะอัปเดตข่าวคราว",
+    "example": "Let's grab coffee this Saturday to catch up with each other's news.",
+    "category": "Phrasal Verbs"
+  },
+  {
+    "id": "b1_513",
+    "word": "cut down on",
+    "pos": "phr.v.",
+    "ipa": "/kʌt daʊn ɒn/",
+    "meaning": "ลดปริมาณการใช้หรือบริโภค",
+    "example": "Doctors advise that we cut down on sugary drinks to stay healthy.",
+    "category": "Phrasal Verbs"
+  },
+  {
+    "id": "b1_514",
+    "word": "figure out",
+    "pos": "phr.v.",
+    "ipa": "/ˈfɪɡər aʊt/",
+    "meaning": "คิดคำนวณหรือหาทางออกได้สำเร็จ",
+    "example": "With enough focus, you can figure out the solution to complex puzzles.",
+    "category": "Phrasal Verbs"
+  },
+  {
+    "id": "b1_515",
+    "word": "turn down",
+    "pos": "phr.v.",
+    "ipa": "/tɜːn daʊn/",
+    "meaning": "ปฏิเสธข้อเสนอ, หรี่เสียงลง",
+    "example": "He turned down the job offer because the daily commute was too long.",
+    "category": "Phrasal Verbs"
+  },
+  {
+    "id": "b1_516",
+    "word": "set up",
+    "pos": "phr.v.",
+    "ipa": "/set ʌp/",
+    "meaning": "ก่อตั้ง, ติดตั้งอุปกรณ์",
+    "example": "She set up an online English tutoring business with friends.",
+    "category": "Phrasal Verbs"
+  },
+  {
+    "id": "b1_517",
+    "word": "piece of cake",
+    "pos": "idiom",
+    "ipa": "/piːs əv keɪk/",
+    "meaning": "ง่ายเหมือนปอกกล้วยเข้าปาก",
+    "example": "Passing the B1 vocabulary test is a piece of cake with daily practice.",
+    "category": "Idioms & Expressions"
+  },
+  {
+    "id": "b1_518",
+    "word": "under the weather",
+    "pos": "idiom",
+    "ipa": "/ˈʌndə ðə ˈweðə/",
+    "meaning": "รู้สึกไม่ค่อยสบาย, ป่วยเล็กน้อย",
+    "example": "I'm feeling a bit under the weather today, so I will rest at home.",
+    "category": "Idioms & Expressions"
+  },
+  {
+    "id": "b1_519",
+    "word": "once in a blue moon",
+    "pos": "idiom",
+    "ipa": "/wʌns ɪn ə bluː muːn/",
+    "meaning": "นานๆ ที, แทบจะไม่เกิดขึ้นเลย",
+    "example": "He only eats fast food once in a blue moon because he prefers cooking.",
+    "category": "Idioms & Expressions"
+  },
+  {
+    "id": "b1_520",
+    "word": "hit the books",
+    "pos": "idiom",
+    "ipa": "/hɪt ðə bʊks/",
+    "meaning": "ตั้งหน้าตั้งตาอ่านหนังสือสอบ",
+    "example": "Final exams start on Monday, so it's time to hit the books tonight.",
+    "category": "Idioms & Expressions"
   }
 ];

@@ -15,6 +15,8 @@ export function useVocabStore() {
     lastStudyDate: new Date().toISOString().split('T')[0],
     dailyGoal: 15,
     studiedTodayCount: 0,
+    xp: 0,
+    level: 1,
   });
   const [isCloudSyncing, setIsCloudSyncing] = useState(false);
   const [cloudStatus, setCloudStatus] = useState<'offline' | 'connected' | 'syncing' | 'error'>('offline');
@@ -94,6 +96,23 @@ export function useVocabStore() {
         ...prev,
         lastStudyDate: today,
         studiedTodayCount: newCount,
+      };
+      localStorage.setItem(STORAGE_KEY_PROFILE, JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
+
+  // Add XP and handle Level Up
+  const addXP = useCallback((points: number) => {
+    setProfile((prev) => {
+      const currentXP = (prev.xp || 0) + points;
+      const newLevel = Math.floor(currentXP / 100) + 1;
+      const oldLevel = prev.level || 1;
+
+      const updated: UserProfile = {
+        ...prev,
+        xp: currentXP,
+        level: newLevel,
       };
       localStorage.setItem(STORAGE_KEY_PROFILE, JSON.stringify(updated));
       return updated;
@@ -277,6 +296,7 @@ export function useVocabStore() {
     setWordStatus,
     recordResult,
     markAsStudied,
+    addXP,
     syncWithSupabase,
     setCloudStatus,
   };

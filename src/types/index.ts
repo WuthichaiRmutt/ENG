@@ -26,6 +26,9 @@ export interface UserProfile {
   lastStudyDate: string; // YYYY-MM-DD
   dailyGoal: number; // e.g. 15 words
   studiedTodayCount: number;
+  xp: number; // Experience points
+  level: number; // Current level
 }
 
-export type ActiveTab = 'dashboard' | 'flashcards' | 'quiz' | 'wordbank';
+export type ActiveTab = 'dashboard' | 'flashcards' | 'games' | 'wordbank';
+export type GameMode = 'menu' | 'speed_match' | 'quiz' | 'listening';
