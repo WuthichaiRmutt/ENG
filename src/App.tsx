@@ -16,6 +16,7 @@ export function App() {
   const [flashcardFilter, setFlashcardFilter] = useState<string>('all');
   const [wordbankFilter, setWordbankFilter] = useState<string>('all');
   const [isCloudModalOpen, setIsCloudModalOpen] = useState(false);
+  const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
 
   // Dark mode
   const [isDark, setIsDark] = useState<boolean>(() => {
@@ -76,6 +77,7 @@ export function App() {
         cloudStatus={cloudStatus}
         isCloudSyncing={isCloudSyncing}
         onOpenCloudModal={() => setIsCloudModalOpen(true)}
+        onOpenInstallModal={() => setIsInstallModalOpen(true)}
         isDark={isDark}
         onToggleDark={() => setIsDark((d) => !d)}
       />
@@ -83,7 +85,10 @@ export function App() {
       {/* Main Content Area */}
       <main className="flex-1 max-w-2xl w-full mx-auto px-4 pt-4 pb-24">
         {/* PWA Install Banner */}
-        <InstallAppBanner />
+        <InstallAppBanner
+          isOpenModal={isInstallModalOpen}
+          onCloseModal={() => setIsInstallModalOpen(false)}
+        />
 
         {activeTab === 'dashboard' && (
           <DashboardView stats={stats} profile={profile} onNavigateTab={handleNavigateTab} />

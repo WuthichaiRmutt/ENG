@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Flame, Cloud, AlertCircle, Sun, Moon, Sparkles, Check, Volume2, VolumeX, Zap } from 'lucide-react';
+import { Flame, Cloud, AlertCircle, Sun, Moon, Sparkles, Check, Volume2, VolumeX, Zap, Download } from 'lucide-react';
 import { UserProfile } from '../types';
 import { soundFx } from '../lib/soundFx';
 
@@ -8,6 +8,7 @@ interface HeaderProps {
   cloudStatus: 'offline' | 'connected' | 'syncing' | 'error';
   isCloudSyncing: boolean;
   onOpenCloudModal: () => void;
+  onOpenInstallModal?: () => void;
   isDark: boolean;
   onToggleDark: () => void;
 }
@@ -17,6 +18,7 @@ export const Header: React.FC<HeaderProps> = ({
   cloudStatus,
   isCloudSyncing,
   onOpenCloudModal,
+  onOpenInstallModal,
   isDark,
   onToggleDark,
 }) => {
@@ -73,6 +75,18 @@ export const Header: React.FC<HeaderProps> = ({
             <Zap className="w-3.5 h-3.5 text-violet-500 fill-violet-500 shrink-0" />
             <span>Lv.{profile.level || 1}</span>
           </div>
+
+          {/* Install App Button */}
+          {onOpenInstallModal && (
+            <button
+              onClick={onOpenInstallModal}
+              className="flex items-center gap-1 bg-gradient-to-r from-indigo-600 to-brand-600 hover:from-indigo-700 hover:to-brand-700 text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow-xs active:scale-95 transition-all whitespace-nowrap"
+              title="ติดตั้งแอปลงบนมือถือหรือคอมพิวเตอร์"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>ติดตั้ง</span>
+            </button>
+          )}
 
           {/* Sound Toggle */}
           <button
