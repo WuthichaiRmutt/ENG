@@ -11,11 +11,28 @@ html, body {
   height: 100%;
   overscroll-behavior-y: none;
   -webkit-tap-highlight-color: transparent;
+  word-break: normal;
+  overflow-wrap: break-word;
+  line-break: normal;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Natural Thai and English word-boundary wrapping */
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+p, span, label {
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 /* Safe area padding for mobile notches and home indicator bar */
 .pb-safe {
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 12px);
 }
 
 .pt-safe {

@@ -148,7 +148,7 @@ export const WordBankView: React.FC<WordBankViewProps> = ({
               >
                 <div className="flex items-center justify-between gap-3">
                   {/* Left: Word and Meaning */}
-                  <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="flex items-center gap-2.5 min-w-0 flex-1">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -160,17 +160,19 @@ export const WordBankView: React.FC<WordBankViewProps> = ({
                       <Volume2 className="w-4 h-4" />
                     </button>
 
-                    <div className="truncate">
-                      <div className="flex items-center gap-1.5">
-                        <span className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-slate-50">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-slate-50 break-words">
                           {w.word}
                         </span>
-                        <span className="text-[10px] uppercase font-bold text-slate-400 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">
+                        <span className="text-[10px] uppercase font-bold text-slate-400 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded shrink-0">
                           {w.pos}
                         </span>
                         {w.ipa && <span className="text-xs font-mono text-slate-400 hidden sm:inline">{w.ipa}</span>}
                       </div>
-                      <p className="text-xs text-slate-600 dark:text-slate-400 truncate mt-0.5">{w.meaning}</p>
+                      <p className={`text-xs text-slate-600 dark:text-slate-400 mt-0.5 leading-snug break-words ${isExpanded ? '' : 'truncate'}`}>
+                        {w.meaning}
+                      </p>
                     </div>
                   </div>
 
@@ -231,7 +233,7 @@ export const WordBankView: React.FC<WordBankViewProps> = ({
                     {w.example && (
                       <div className="bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-200/60 dark:border-slate-700/50">
                         <span className="text-[10px] font-bold text-slate-400 block mb-0.5">ตัวอย่างประโยค:</span>
-                        <p className="italic text-slate-700 dark:text-slate-300">"{w.example}"</p>
+                        <p className="italic text-slate-700 dark:text-slate-300 break-words leading-relaxed">"{w.example}"</p>
                       </div>
                     )}
                   </div>

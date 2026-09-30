@@ -45,7 +45,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ activeTab, onTabChange, fo
                   </span>
                 )}
               </div>
-              <span className={`text-[11px] mt-1 tracking-tight ${isActive ? 'font-bold' : 'font-medium'}`}>
+              <span className={`text-[11px] mt-1 tracking-tight whitespace-nowrap ${isActive ? 'font-bold' : 'font-medium'}`}>
                 {tab.label}
               </span>
 

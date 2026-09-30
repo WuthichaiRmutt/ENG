@@ -232,14 +232,14 @@ export const QuizView: React.FC<QuizViewProps> = ({ words, onRecordResult }) => 
               key={idx}
               onClick={() => handleSelectOption(opt)}
               disabled={isSubmitted}
-              className={`w-full p-3.5 rounded-2xl border text-left text-sm transition-all flex items-center justify-between shadow-xs ${btnStyle}`}
+              className={`w-full p-3.5 rounded-2xl border text-left text-sm transition-all flex items-center justify-between gap-2 shadow-xs ${btnStyle}`}
             >
-              <span className="leading-snug">{opt}</span>
+              <span className="flex-1 min-w-0 leading-relaxed text-left break-words">{opt}</span>
               {isSubmitted && opt === currentQ.correctAnswer && (
-                <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0 ml-2" />
+                <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0 ml-1.5" />
               )}
               {isSubmitted && isSelected && opt !== currentQ.correctAnswer && (
-                <XCircle className="w-5 h-5 text-rose-600 shrink-0 ml-2" />
+                <XCircle className="w-5 h-5 text-rose-600 shrink-0 ml-1.5" />
               )}
             </button>
           );
