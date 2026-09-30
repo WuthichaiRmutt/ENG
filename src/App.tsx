@@ -8,6 +8,7 @@ import { FlashcardsView } from './components/FlashcardsView';
 import { GamesHubView } from './components/GamesHubView';
 import { WordBankView } from './components/WordBankView';
 import { CloudSyncModal } from './components/CloudSyncModal';
+import { InstallAppBanner } from './components/InstallAppBanner';
 import { getStoredSupabaseConfig } from './lib/supabaseClient';
 
 export function App() {
@@ -81,6 +82,9 @@ export function App() {
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-2xl w-full mx-auto px-4 pt-4 pb-24">
+        {/* PWA Install Banner */}
+        <InstallAppBanner />
+
         {activeTab === 'dashboard' && (
           <DashboardView stats={stats} profile={profile} onNavigateTab={handleNavigateTab} />
         )}
