@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Zap, Headphones, Brain, Sparkles, Trophy, Flame, ChevronRight, Award } from 'lucide-react';
+import { Zap, Headphones, Brain, Sparkles, Trophy, Flame, ChevronRight, Award, FileText } from 'lucide-react';
 import { WordItem, GameMode, UserProfile } from '../types';
 import { SpeedMatchGame } from './SpeedMatchGame';
 import { ListeningQuizGame } from './ListeningQuizGame';
 import { QuizView } from './QuizView';
+import { ClozeTestGame } from './ClozeTestGame';
 
 interface GamesHubViewProps {
   words: WordItem[];
@@ -38,6 +39,16 @@ export const GamesHubView: React.FC<GamesHubViewProps> = ({
         words={words}
         onAddXP={onAddXP}
         onRecordResult={onRecordResult}
+        onBack={() => setActiveMode('menu')}
+      />
+    );
+  }
+
+  if (activeMode === 'cloze') {
+    return (
+      <ClozeTestGame
+        words={words}
+        onAddXP={onAddXP}
         onBack={() => setActiveMode('menu')}
       />
     );
@@ -194,7 +205,36 @@ export const GamesHubView: React.FC<GamesHubViewProps> = ({
           </div>
         </div>
 
-        {/* Game 3: Multiple Choice Quiz */}
+        {/* Game 3: Contextual Cloze Test */}
+        <div
+          onClick={() => setActiveMode('cloze')}
+          className="group bg-white dark:bg-slate-900 border border-emerald-200/90 dark:border-emerald-900/60 hover:border-emerald-500 rounded-3xl p-4 shadow-sm transition-all cursor-pointer active:scale-98 flex items-center justify-between gap-3 relative overflow-hidden"
+        >
+          <div className="flex items-center gap-3.5 min-w-0">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-emerald-500/30 group-hover:scale-105 transition-transform">
+              <FileText className="w-6 h-6" />
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <h4 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-slate-50">
+                  Contextual Cloze (เติมคำในประโยค)
+                </h4>
+                <span className="text-[10px] font-bold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded-full whitespace-nowrap">
+                  แนวข้อสอบจริง 📝
+                </span>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">
+                ฝึกเลือกรูปคำศัพท์และ Part of Speech ที่ถูกต้องลงในบริบท พร้อมเฉลยไวยากรณ์ละเอียด
+              </p>
+            </div>
+          </div>
+
+          <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 group-hover:text-emerald-500 group-hover:translate-x-0.5 transition-all shrink-0">
+            <ChevronRight className="w-4 h-4" />
+          </div>
+        </div>
+
+        {/* Game 4: Multiple Choice Quiz */}
         <div
           onClick={() => setActiveMode('quiz')}
           className="group bg-white dark:bg-slate-900 border border-indigo-200/90 dark:border-indigo-900/60 hover:border-indigo-500 rounded-3xl p-4 shadow-sm transition-all cursor-pointer active:scale-98 flex items-center justify-between gap-3 relative overflow-hidden"

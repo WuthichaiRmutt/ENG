@@ -42,4 +42,4 @@ export interface UserProfile {
 }
 
 export type ActiveTab = 'dashboard' | 'flashcards' | 'games' | 'wordbank';
-export type GameMode = 'menu' | 'speed_match' | 'quiz' | 'listening';
+export type GameMode = 'menu' | 'speed_match' | 'quiz' | 'listening' | 'cloze';
