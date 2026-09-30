@@ -29,6 +29,22 @@ interface DashboardViewProps {
 export const DashboardView: React.FC<DashboardViewProps> = ({ stats, profile, onNavigateTab }) => {
   return (
     <div className="space-y-4 sm:space-y-5 pb-6">
+      {/* 🚀 Deployment Verification Banner */}
+      <div className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white p-3 sm:p-3.5 rounded-2xl shadow-md flex items-center justify-between gap-2 border border-emerald-400/40">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <span className="flex h-2.5 w-2.5 relative shrink-0">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-white"></span>
+          </span>
+          <span className="text-xs font-bold leading-tight truncate">
+            ✨ อัปเดตระบบ V2.0 (ปรับแก้ตัดคำมือถือแล้ว)
+          </span>
+        </div>
+        <span className="text-[10px] font-extrabold bg-white/20 backdrop-blur-sm px-2 py-0.5 rounded-full shrink-0">
+          VERIFIED
+        </span>
+      </div>
+
       {/* Hero Learning Card */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-600 via-indigo-700 to-brand-800 text-white p-4 sm:p-5 shadow-xl shadow-indigo-500/20">
         <div className="absolute top-0 right-0 -mr-8 -mt-8 w-40 h-40 bg-white/10 rounded-full blur-2xl pointer-events-none" />
