@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import {
   Volume2,
   RotateCw,
@@ -7,37 +7,56 @@ import {
   ChevronLeft,
   ChevronRight,
   Shuffle,
+  Sparkles,
+  Trophy,
+  ArrowRight,
+  BookOpen,
 } from 'lucide-react';
-import { WordItem, UserWordProgress } from '../types';
+import confetti from 'canvas-confetti';
+import { WordItem, WordStatus, UserWordProgress } from '../types';
 import { ttsService } from '../lib/tts';
 import { isDueForReview } from '../lib/srs';
+import { soundFx } from '../lib/soundFx';
 
 interface FlashcardsViewProps {
   words: WordItem[];
   progressMap: Record<string, UserWordProgress>;
   onRecordResult: (vocabId: string, isCorrect: boolean) => void;
+  onSetStatus?: (vocabId: string, status: WordStatus) => void;
   initialFilter?: string;
 }
+
+const STORAGE_KEY_FILTER = 'pet_b1_flashcard_filter_v2';
+const STORAGE_KEY_LAST_WORD = 'pet_b1_flashcard_last_word_id_v2';
 
 export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
   words,
   progressMap,
   onRecordResult,
-  initialFilter = 'all',
+  onSetStatus,
+  initialFilter,
 }) => {
-  const [filterMode, setFilterMode] = useState<string>(initialFilter);
+  // Load saved filter preference or default to 'learning' (unmastered queue)
+  const [filterMode, setFilterMode] = useState<string>(() => {
+    if (initialFilter && initialFilter !== 'all') return initialFilter;
+    const saved = localStorage.getItem(STORAGE_KEY_FILTER);
+    return saved || 'learning';
+  });
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const hasLoadedInitialIndex = useRef(false);
 
+  // Sync external filter change (e.g. from Dashboard click)
   useEffect(() => {
     if (initialFilter) {
       setFilterMode(initialFilter);
-      setCurrentIndex(0);
       setIsFlipped(false);
     }
   }, [initialFilter]);
 
+  // Compute active deck based on filterMode
   const filteredWords = useMemo(() => {
     if (filterMode === 'focus') {
       return words.filter((w) => progressMap[w.id]?.status === 'focus');
@@ -51,18 +70,58 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
         return p && isDueForReview(p.nextReviewAt);
       });
     }
+    if (filterMode === 'learning') {
+      // SMART QUEUE: Exclude words already marked as Mastered!
+      // Prioritize words in Focus Zone, then due review, then unstudied words
+      const unmastered = words.filter((w) => progressMap[w.id]?.status !== 'mastered');
+      return [...unmastered].sort((a, b) => {
+        const statA = progressMap[a.id]?.status;
+        const statB = progressMap[b.id]?.status;
+        if (statA === 'focus' && statB !== 'focus') return -1;
+        if (statB === 'focus' && statA !== 'focus') return 1;
+        return 0;
+      });
+    }
+    // 'all' mode: show all 520 words
     return words;
   }, [words, progressMap, filterMode]);
 
+  // Restore last studied word position from localStorage on first mount or filter change
   useEffect(() => {
+    if (filteredWords.length === 0) {
+      setCurrentIndex(0);
+      return;
+    }
+
+    if (!hasLoadedInitialIndex.current) {
+      hasLoadedInitialIndex.current = true;
+      const lastWordId = localStorage.getItem(STORAGE_KEY_LAST_WORD);
+      if (lastWordId) {
+        const foundIndex = filteredWords.findIndex((w) => w.id === lastWordId);
+        if (foundIndex >= 0) {
+          setCurrentIndex(foundIndex);
+          return;
+        }
+      }
+    }
+
+    // Ensure currentIndex is within valid bounds
     if (currentIndex >= filteredWords.length) {
       setCurrentIndex(Math.max(0, filteredWords.length - 1));
     }
-  }, [filteredWords.length, currentIndex]);
+  }, [filteredWords, currentIndex]);
 
   const currentWord = filteredWords[currentIndex] || null;
   const currentProgress = currentWord ? progressMap[currentWord.id] : null;
 
+  // Persist current word ID whenever it changes
+  useEffect(() => {
+    if (currentWord) {
+      localStorage.setItem(STORAGE_KEY_LAST_WORD, currentWord.id);
+    }
+  }, [currentWord]);
+
+  // TTS audio pronunciation
   const handleSpeak = useCallback(
     async (e?: React.MouseEvent) => {
       if (e) e.stopPropagation();
@@ -74,15 +133,15 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
     [currentWord, isSpeaking]
   );
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     setIsFlipped(false);
     setCurrentIndex((prev) => (prev + 1 < filteredWords.length ? prev + 1 : 0));
-  };
+  }, [filteredWords.length]);
 
-  const handlePrev = () => {
+  const handlePrev = useCallback(() => {
     setIsFlipped(false);
     setCurrentIndex((prev) => (prev - 1 >= 0 ? prev - 1 : filteredWords.length - 1));
-  };
+  }, [filteredWords.length]);
 
   const handleShuffle = () => {
     setIsFlipped(false);
@@ -92,104 +151,198 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
     }
   };
 
-  const handleRate = (isCorrect: boolean) => {
+  const handleFilterChange = (mode: string) => {
+    setFilterMode(mode);
+    localStorage.setItem(STORAGE_KEY_FILTER, mode);
+    setCurrentIndex(0);
+    setIsFlipped(false);
+  };
+
+  // ACTION 1: Mark as "จำได้แม่นแล้ว" (Mastered)
+  const handleMarkMastered = () => {
     if (!currentWord) return;
-    onRecordResult(currentWord.id, isCorrect);
+    soundFx.playCorrect();
+
+    if (onSetStatus) {
+      onSetStatus(currentWord.id, 'mastered');
+    } else {
+      onRecordResult(currentWord.id, true);
+    }
+
+    // If currently in 'learning' filter, the card will leave the list.
+    // We stay at current index or wrap around.
+    setIsFlipped(false);
+    if (filterMode === 'learning' || filterMode === 'focus') {
+      if (currentIndex >= filteredWords.length - 1) {
+        setCurrentIndex(0);
+      }
+    } else {
+      handleNext();
+    }
+  };
+
+  // ACTION 2: Mark as "ยังไม่แม่น" (Focus Zone)
+  const handleMarkFocus = () => {
+    if (!currentWord) return;
+    soundFx.playWrong();
+
+    if (onSetStatus) {
+      onSetStatus(currentWord.id, 'focus');
+    } else {
+      onRecordResult(currentWord.id, false);
+    }
+
+    setIsFlipped(false);
     handleNext();
   };
 
+  // ACTION 3: SRS Step (ทบทวนตามรอบ Leitner Box)
+  const handleSrsReview = () => {
+    if (!currentWord) return;
+    soundFx.playCorrect();
+    onRecordResult(currentWord.id, true);
+    setIsFlipped(false);
+    handleNext();
+  };
+
+  // Keyboard navigation shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.code === 'Space') {
         e.preventDefault();
         setIsFlipped((f) => !f);
       } else if (e.code === 'ArrowRight') {
-        handleRate(true);
+        handleMarkMastered();
       } else if (e.code === 'ArrowLeft') {
-        handleRate(false);
+        handleMarkFocus();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentWord]);
+  }, [currentWord, handleNext]);
 
+  // Counts for top filter badges
+  const focusCount = useMemo(() => words.filter((w) => progressMap[w.id]?.status === 'focus').length, [words, progressMap]);
+  const masteredCount = useMemo(() => words.filter((w) => progressMap[w.id]?.status === 'mastered').length, [words, progressMap]);
+  const dueCount = useMemo(() => words.filter((w) => progressMap[w.id] && isDueForReview(progressMap[w.id].nextReviewAt)).length, [words, progressMap]);
+  const unmasteredCount = words.length - masteredCount;
+
+  // Empty state handler
   if (filteredWords.length === 0) {
     return (
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 text-center my-6 space-y-3.5 shadow-sm">
-        <div className="w-14 h-14 rounded-2xl bg-amber-50 dark:bg-amber-950/50 text-amber-500 mx-auto flex items-center justify-center text-2xl">
-          🎯
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 text-center my-6 space-y-4 shadow-sm max-w-md mx-auto animate-fade-in">
+        <div className="w-16 h-16 rounded-3xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-500 mx-auto flex items-center justify-center text-3xl shadow-sm">
+          {filterMode === 'learning' ? '🏆' : filterMode === 'focus' ? '🎉' : '📚'}
         </div>
-        <h3 className="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100">
-          ไม่พบคำศัพท์ในหมวดหมู่นี้
-        </h3>
-        <p className="text-xs text-slate-500 max-w-xs mx-auto leading-relaxed">
-          {filterMode === 'focus'
-            ? 'ยอดเยี่ยมมาก! ไม่มีคำที่ค้างอยู่ใน Focus Zone แล้ว'
-            : 'ลองสลับกลับไปที่โหมดแสดงคำศัพท์ทั้งหมดเพื่อเริ่มฝึกฝน'}
-        </p>
-        <button
-          onClick={() => setFilterMode('all')}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs py-2 px-4 rounded-xl transition shadow-xs"
-        >
-          แสดงคำศัพท์ทั้งหมด (500 คำ)
-        </button>
+
+        <div>
+          <h3 className="text-base sm:text-lg font-black text-slate-800 dark:text-slate-100">
+            {filterMode === 'learning'
+              ? 'ยินดีด้วย! คุณจำศัพท์ได้แม่นครบทุกคำแล้ว 🎉'
+              : filterMode === 'focus'
+              ? 'ยอดเยี่ยม! ไม่มีคำค้างใน Focus Zone'
+              : filterMode === 'due'
+              ? 'ยังไม่มีคำศัพท์ที่ถึงรอบทบทวนในตอนนี้'
+              : 'ไม่พบคำศัพท์ในหมวดหมู่นี้'}
+          </h3>
+          <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs mx-auto leading-relaxed mt-1">
+            {filterMode === 'learning'
+              ? `คุณผ่านการเรียนรู้ทั้ง ${words.length} คำเรียบร้อยแล้ว สามารถทบทวนซ้ำหรือไปทดสอบในศูนย์รวมเกมได้เลย`
+              : 'สามารถสลับกลับไปที่โหมดกำลังเรียนรู้หรือคำศัพท์ทั้งหมดเพื่อฝึกฝนต่อได้'}
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-2 pt-2">
+          <button
+            onClick={() => handleFilterChange('learning')}
+            className="w-full bg-indigo-600 hover:bg-indigo-700 active:scale-98 text-white font-bold text-xs py-2.5 px-4 rounded-xl transition shadow-xs"
+          >
+            🎯 โหมดกำลังเรียนรู้ ({unmasteredCount} คำ)
+          </button>
+          <button
+            onClick={() => handleFilterChange('all')}
+            className="w-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs py-2.5 px-4 rounded-xl transition"
+          >
+            📚 แสดงคำศัพท์ทั้งหมด ({words.length} คำ)
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-3.5 pb-8 max-w-md mx-auto">
+    <div className="space-y-3.5 pb-8 max-w-md mx-auto animate-fade-in">
       {/* Top Filter Chips */}
       <div className="flex items-center justify-between gap-1.5 overflow-x-auto pb-1 no-scrollbar">
-        <div className="flex items-center gap-1.5 shrink-0">
+        <div className="flex items-center gap-1.5 shrink-0 text-[11px] sm:text-xs">
+          {/* Smart Queue: To Learn */}
           <button
-            onClick={() => {
-              setFilterMode('all');
-              setCurrentIndex(0);
-            }}
-            className={`text-[11px] sm:text-xs px-2.5 sm:px-3 py-1.5 rounded-full font-bold transition whitespace-nowrap ${
-              filterMode === 'all'
+            onClick={() => handleFilterChange('learning')}
+            className={`px-3 py-1.5 rounded-full font-bold transition whitespace-nowrap ${
+              filterMode === 'learning'
                 ? 'bg-indigo-600 text-white shadow-xs'
-                : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
+                : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-indigo-300'
             }`}
+            title="แสดงคำศัพท์ที่ยังไม่ผ่านเกณฑ์จำได้แม่นยำ"
           >
-            ทั้งหมด ({words.length})
+            🎯 กำลังเรียน ({unmasteredCount})
           </button>
 
+          {/* Focus Zone */}
           <button
-            onClick={() => {
-              setFilterMode('focus');
-              setCurrentIndex(0);
-            }}
-            className={`text-[11px] sm:text-xs px-2.5 sm:px-3 py-1.5 rounded-full font-bold transition flex items-center gap-1 whitespace-nowrap ${
+            onClick={() => handleFilterChange('focus')}
+            className={`px-2.5 py-1.5 rounded-full font-bold transition flex items-center gap-1 whitespace-nowrap ${
               filterMode === 'focus'
                 ? 'bg-rose-600 text-white shadow-xs'
                 : 'bg-white dark:bg-slate-800 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900/50'
             }`}
           >
             <AlertTriangle className="w-3 h-3 shrink-0" />
-            <span>ยังไม่แม่น</span>
+            <span>ยังไม่แม่น ({focusCount})</span>
           </button>
 
+          {/* Due Review */}
           <button
-            onClick={() => {
-              setFilterMode('due');
-              setCurrentIndex(0);
-            }}
-            className={`text-[11px] sm:text-xs px-2.5 sm:px-3 py-1.5 rounded-full font-bold transition whitespace-nowrap ${
+            onClick={() => handleFilterChange('due')}
+            className={`px-2.5 py-1.5 rounded-full font-bold transition whitespace-nowrap ${
               filterMode === 'due'
                 ? 'bg-amber-600 text-white shadow-xs'
                 : 'bg-white dark:bg-slate-800 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-900/50'
             }`}
           >
-            ถึงรอบทบทวน
+            ⏰ ถึงรอบ ({dueCount})
+          </button>
+
+          {/* Mastered */}
+          <button
+            onClick={() => handleFilterChange('mastered')}
+            className={`px-2.5 py-1.5 rounded-full font-bold transition flex items-center gap-1 whitespace-nowrap ${
+              filterMode === 'mastered'
+                ? 'bg-emerald-600 text-white shadow-xs'
+                : 'bg-white dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/50'
+            }`}
+          >
+            <CheckCircle2 className="w-3 h-3 shrink-0" />
+            <span>รู้แล้ว ({masteredCount})</span>
+          </button>
+
+          {/* All Words */}
+          <button
+            onClick={() => handleFilterChange('all')}
+            className={`px-2.5 py-1.5 rounded-full font-bold transition whitespace-nowrap ${
+              filterMode === 'all'
+                ? 'bg-slate-800 text-white dark:bg-slate-200 dark:text-slate-900 shadow-xs'
+                : 'bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700'
+            }`}
+          >
+            ทั้งหมด ({words.length})
           </button>
         </div>
 
         <button
           onClick={handleShuffle}
-          className="p-1.5 rounded-full bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:text-indigo-600 transition shrink-0"
-          title="สุ่มการ์ด"
+          className="p-1.5 rounded-full bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:text-indigo-600 transition shrink-0 ml-1 shadow-2xs"
+          title="สลับการ์ดแบบสุ่ม (Shuffle)"
         >
           <Shuffle className="w-3.5 h-3.5" />
         </button>
@@ -197,15 +350,27 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
 
       {/* Progress & Card Index Header */}
       <div className="flex items-center justify-between text-xs text-slate-400 font-semibold px-1">
-        <span className="whitespace-nowrap">
-          ใบที่ <span className="text-indigo-600 dark:text-indigo-400 font-bold">{currentIndex + 1}</span> / {filteredWords.length}
+        <span className="whitespace-nowrap flex items-center gap-1">
+          ใบที่ <strong className="text-indigo-600 dark:text-indigo-400 tabular-nums">{currentIndex + 1}</strong> จาก {filteredWords.length} คำ
         </span>
 
-        {currentProgress && (
-          <span className="flex items-center gap-1 text-[11px] bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 px-2 py-0.5 rounded-md font-semibold whitespace-nowrap">
-            SRS Box {currentProgress.boxLevel}/5
-          </span>
-        )}
+        <div className="flex items-center gap-1.5">
+          {currentProgress?.status === 'mastered' && (
+            <span className="flex items-center gap-1 text-[10px] bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded-md font-bold whitespace-nowrap border border-emerald-200/80 dark:border-emerald-800/60">
+              <CheckCircle2 className="w-3 h-3" /> จำได้แม่นแล้ว
+            </span>
+          )}
+          {currentProgress?.status === 'focus' && (
+            <span className="flex items-center gap-1 text-[10px] bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-400 px-2 py-0.5 rounded-md font-bold whitespace-nowrap border border-rose-200/80 dark:border-rose-800/60">
+              <AlertTriangle className="w-3 h-3" /> อยู่ใน Focus Zone
+            </span>
+          )}
+          {currentProgress && currentProgress.boxLevel > 1 && currentProgress.status !== 'mastered' && (
+            <span className="text-[10px] bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 px-2 py-0.5 rounded-md font-semibold whitespace-nowrap">
+              SRS Box {currentProgress.boxLevel}/5
+            </span>
+          )}
+        </div>
       </div>
 
       {/* 3D Flashcard Container */}
@@ -259,7 +424,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
             {/* Bottom Flip Hint */}
             <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-400 font-medium whitespace-nowrap">
               <RotateCw className="w-3 h-3 text-indigo-500 group-hover:rotate-180 transition-transform duration-300 shrink-0" />
-              <span>แตะเพื่อดูคำแปลและความหมาย</span>
+              <span>แตะเพื่อดูคำแปลและคำอธิบาย</span>
             </div>
           </div>
 
@@ -344,20 +509,20 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
                 <div className="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-xl border border-slate-200/60 dark:border-slate-700/50 flex flex-wrap items-center gap-2 text-[10px] text-left">
                   {currentWord.synonyms && currentWord.synonyms.length > 0 && (
                     <span className="text-slate-600 dark:text-slate-400">
-                      <strong className="text-emerald-600 dark:text-emerald-400">คำเหมือน (Syn):</strong>{' '}
+                      <strong className="text-emerald-600 dark:text-emerald-400">คำเหมือน:</strong>{' '}
                       {currentWord.synonyms.join(', ')}
                     </span>
                   )}
                   {currentWord.antonyms && currentWord.antonyms.length > 0 && (
                     <span className="text-slate-600 dark:text-slate-400">
-                      <strong className="text-rose-600 dark:text-rose-400">คำตรงข้าม (Ant):</strong>{' '}
+                      <strong className="text-rose-600 dark:text-rose-400">คำตรงข้าม:</strong>{' '}
                       {currentWord.antonyms.join(', ')}
                     </span>
                   )}
                 </div>
               )}
 
-              {/* Contextual Real Example */}
+              {/* Real Context Example */}
               {currentWord?.example && (
                 <div className="bg-white/80 dark:bg-slate-800/50 p-2.5 rounded-2xl border border-slate-200/80 dark:border-slate-700/50">
                   <span className="text-[10px] font-bold text-slate-400 block mb-0.5">ตัวอย่างประโยคบริบทจริง:</span>
@@ -376,38 +541,56 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
         </div>
       </div>
 
-      {/* Thumb-friendly SRS Rating Buttons */}
-      <div className="grid grid-cols-2 gap-2 pt-1">
+      {/* 3 Thumb-friendly Rating Buttons */}
+      <div className="grid grid-cols-3 gap-1.5 pt-1">
+        {/* Button 1: Focus */}
         <button
-          onClick={() => handleRate(false)}
-          className="bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 active:scale-95 border border-rose-200 dark:border-rose-800/60 text-rose-700 dark:text-rose-400 font-bold text-xs sm:text-sm py-2.5 px-3 rounded-2xl transition flex items-center justify-center gap-1.5 shadow-xs whitespace-nowrap"
+          onClick={handleMarkFocus}
+          className="bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 active:scale-95 border border-rose-200 dark:border-rose-800/60 text-rose-700 dark:text-rose-400 font-bold text-[11px] sm:text-xs py-2.5 px-2 rounded-2xl transition flex flex-col sm:flex-row items-center justify-center gap-1 shadow-xs"
+          title="คำนี้ยังไม่แม่น ส่งเข้า Focus Zone เพื่อทบทวนซ้ำ"
         >
-          <AlertTriangle className="w-4 h-4 shrink-0" />
-          <span>ยังไม่แม่น (Focus)</span>
+          <AlertTriangle className="w-3.5 h-3.5 shrink-0 text-rose-500" />
+          <span className="whitespace-nowrap">ยังไม่แม่น</span>
         </button>
 
+        {/* Button 2: SRS Next Review */}
         <button
-          onClick={() => handleRate(true)}
-          className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs sm:text-sm py-2.5 px-3 rounded-2xl transition flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/20 whitespace-nowrap"
+          onClick={handleSrsReview}
+          className="bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 active:scale-95 border border-amber-200 dark:border-amber-800/60 text-amber-700 dark:text-amber-400 font-bold text-[11px] sm:text-xs py-2.5 px-2 rounded-2xl transition flex flex-col sm:flex-row items-center justify-center gap-1 shadow-xs"
+          title="พอจำได้ เลื่อนกล่องทบทวน SRS ตามรอบ"
         >
-          <CheckCircle2 className="w-4 h-4 shrink-0" />
-          <span>จำได้แม่นแล้ว</span>
+          <RotateCw className="w-3.5 h-3.5 shrink-0 text-amber-500" />
+          <span className="whitespace-nowrap">ทบทวนต่อ (SRS)</span>
+        </button>
+
+        {/* Button 3: Mastered */}
+        <button
+          onClick={handleMarkMastered}
+          className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-black text-[11px] sm:text-xs py-2.5 px-2 rounded-2xl transition flex flex-col sm:flex-row items-center justify-center gap-1 shadow-md shadow-emerald-600/20"
+          title="จำได้แม่นยำถาวรแล้ว บันทึกลง Mastered Bank และนำออกจากคิวเรียน"
+        >
+          <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+          <span className="whitespace-nowrap">จำได้แม่นแล้ว</span>
         </button>
       </div>
 
       {/* Prev / Next Small Navigation */}
-      <div className="flex items-center justify-center gap-4 text-xs font-semibold text-slate-400 pt-0.5">
+      <div className="flex items-center justify-between text-xs font-semibold text-slate-400 pt-1 px-1">
         <button
           onClick={handlePrev}
-          className="flex items-center gap-1 hover:text-slate-700 dark:hover:text-slate-200 transition p-1"
+          className="flex items-center gap-1 hover:text-slate-700 dark:hover:text-slate-200 transition py-1 px-2 rounded-lg"
         >
           <ChevronLeft className="w-3.5 h-3.5" />
-          <span>ย้อนกลับ</span>
+          <span>คำก่อนหน้า</span>
         </button>
-        <span>•</span>
+
+        <span className="text-[11px] text-slate-400">
+          คำที่ {currentIndex + 1} / {filteredWords.length}
+        </span>
+
         <button
           onClick={handleNext}
-          className="flex items-center gap-1 hover:text-slate-700 dark:hover:text-slate-200 transition p-1"
+          className="flex items-center gap-1 hover:text-slate-700 dark:hover:text-slate-200 transition py-1 px-2 rounded-lg"
         >
           <span>คำถัดไป</span>
           <ChevronRight className="w-3.5 h-3.5" />

@@ -102,6 +102,11 @@ export function App() {
               recordResult(id, correct);
               if (correct) addXP(3);
             }}
+            onSetStatus={(id, status) => {
+              setWordStatus(id, status);
+              if (status === 'mastered') addXP(5);
+              else addXP(1);
+            }}
             initialFilter={flashcardFilter}
           />
         )}

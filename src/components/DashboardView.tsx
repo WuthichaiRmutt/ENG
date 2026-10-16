@@ -84,7 +84,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ stats, profile, on
           {/* Quick Action Buttons */}
           <div className="grid grid-cols-2 gap-2 mt-3.5">
             <button
-              onClick={() => onNavigateTab('flashcards')}
+              onClick={() => onNavigateTab('flashcards', 'learning')}
               className="bg-white text-indigo-700 hover:bg-indigo-50 active:scale-95 font-bold text-xs sm:text-sm py-2.5 px-2.5 sm:px-3 rounded-xl shadow-md transition flex items-center justify-center gap-1.5"
             >
               <Layers className="w-4 h-4 shrink-0" />
