@@ -24,6 +24,7 @@ import {
   Shuffle,
   RefreshCw,
   Layers,
+  ChevronRight,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import {
@@ -253,7 +254,7 @@ export const MockExamSimulator: React.FC<MockExamSimulatorProps> = ({
 
     const scorePercentage = (correctCount / questions.length) * 100;
     if (scorePercentage >= 60) {
-      soundFx.playMastered();
+      soundFx.playLevelUp();
       confetti({
         particleCount: 80,
         spread: 70,

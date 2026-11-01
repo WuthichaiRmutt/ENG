@@ -1,3 +1,5 @@
+import type { WordFamily } from '../types';
+
 export interface VocabularyItem {
   id: string;
   word: string;
@@ -6,6 +8,10 @@ export interface VocabularyItem {
   meaning: string;
   example: string;
   category: string;
+  collocations?: string[];
+  synonyms?: string[];
+  antonyms?: string[];
+  wordFamily?: WordFamily;
 }
 
 export const CAMBRIDGE_B1_VOCABULARY: VocabularyItem[] = [

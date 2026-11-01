@@ -153,6 +153,10 @@ class SoundFXService {
     }
   }
 
+  public playMastered() {
+    this.playLevelUp();
+  }
+
   // Subtle tap sound for buttons
   public playTap() {
     if (!this.enabled) return;
