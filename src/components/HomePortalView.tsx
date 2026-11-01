@@ -202,14 +202,14 @@ export const HomePortalView: React.FC<HomePortalViewProps> = ({
 
   return (
     <div className="space-y-4 pb-20 animate-fade-in">
-      {/* 📱 1. COMPACT MOBILE USER SUMMARY (Very clean, no giant banner!) */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-3.5 shadow-xs flex items-center justify-between gap-3">
+      {/* 📱 1. COMPACT iOS GLASS USER SUMMARY */}
+      <div className="ios-glass rounded-[24px] p-3.5 shadow-sm flex items-center justify-between gap-3">
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
             <span className="text-sm font-black text-slate-900 dark:text-white truncate">
               Cambridge PET B1
             </span>
-            <span className="text-[10px] font-black bg-indigo-50 dark:bg-indigo-950/80 text-indigo-600 dark:text-indigo-400 px-1.5 py-0.2 rounded-md">
+            <span className="text-[10px] font-black bg-indigo-50 dark:bg-indigo-950/80 text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded-lg">
               Academy
             </span>
           </div>
@@ -220,29 +220,29 @@ export const HomePortalView: React.FC<HomePortalViewProps> = ({
 
         {/* Quick Compact Stats Pills */}
         <div className="flex items-center gap-1.5 shrink-0">
-          <div className="flex items-center gap-1 bg-amber-50 dark:bg-amber-950/50 border border-amber-200/60 dark:border-amber-800/60 px-2 py-1 rounded-xl text-xs font-bold text-amber-700 dark:text-amber-400">
+          <div className="flex items-center gap-1 bg-amber-500/10 border border-amber-500/20 px-2 py-1 rounded-xl text-xs font-bold text-amber-600 dark:text-amber-400">
             <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
             <span>{profile.streakDays}ว.</span>
           </div>
-          <div className="flex items-center gap-1 bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200/60 dark:border-indigo-800/60 px-2 py-1 rounded-xl text-xs font-bold text-indigo-700 dark:text-indigo-400">
+          <div className="flex items-center gap-1 bg-indigo-500/10 border border-indigo-500/20 px-2 py-1 rounded-xl text-xs font-bold text-indigo-600 dark:text-indigo-400">
             <Zap className="w-3.5 h-3.5 text-indigo-600 fill-indigo-600" />
             <span>{profile.xp || 0} XP</span>
           </div>
         </div>
       </div>
 
-      {/* 🚀 2. TWO PRIMARY FEATURED CARDS (Big Touch Targets) */}
+      {/* 🚀 2. TWO PRIMARY FEATURED CARDS (iOS Squircle & Spring Haptics) */}
       <div className="grid grid-cols-2 gap-2.5">
         {/* Card A: ท่องศัพท์ */}
         <div
           onClick={() => onNavigateTab('flashcards')}
-          className="bg-gradient-to-br from-indigo-600 to-blue-600 text-white rounded-2xl p-3.5 shadow-md shadow-indigo-500/15 cursor-pointer active:scale-97 transition-all flex flex-col justify-between min-h-[115px]"
+          className="bg-gradient-to-br from-indigo-600 via-indigo-600 to-blue-600 text-white rounded-[24px] p-3.5 shadow-lg shadow-indigo-500/20 cursor-pointer ios-spring flex flex-col justify-between min-h-[115px] border border-white/20"
         >
           <div className="flex items-center justify-between">
-            <div className="w-9 h-9 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-white">
+            <div className="w-9 h-9 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white">
               <Layers className="w-5 h-5" />
             </div>
-            <span className="text-[9px] font-black uppercase bg-white/20 px-2 py-0.5 rounded-full">
+            <span className="text-[9px] font-black uppercase bg-white/20 backdrop-blur-md px-2 py-0.5 rounded-full">
               หลัก ⭐
             </span>
           </div>
@@ -259,13 +259,13 @@ export const HomePortalView: React.FC<HomePortalViewProps> = ({
         {/* Card B: ข้อสอบจำลอง */}
         <div
           onClick={() => onNavigateTab('exam')}
-          className="bg-gradient-to-br from-purple-600 to-pink-600 text-white rounded-2xl p-3.5 shadow-md shadow-purple-500/15 cursor-pointer active:scale-97 transition-all flex flex-col justify-between min-h-[115px]"
+          className="bg-gradient-to-br from-purple-600 via-purple-600 to-pink-600 text-white rounded-[24px] p-3.5 shadow-lg shadow-purple-500/20 cursor-pointer ios-spring flex flex-col justify-between min-h-[115px] border border-white/20"
         >
           <div className="flex items-center justify-between">
-            <div className="w-9 h-9 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-white">
+            <div className="w-9 h-9 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white">
               <FileCheck className="w-5 h-5" />
             </div>
-            <span className="text-[9px] font-black uppercase bg-amber-400 text-slate-900 px-2 py-0.5 rounded-full">
+            <span className="text-[9px] font-black uppercase bg-amber-400 text-slate-900 px-2 py-0.5 rounded-full font-sans">
               HOT 🔥
             </span>
           </div>
@@ -280,7 +280,7 @@ export const HomePortalView: React.FC<HomePortalViewProps> = ({
         </div>
       </div>
 
-      {/* 🧭 3. COMPACT HORIZONTAL FILTER CHIPS */}
+      {/* 🧭 3. iOS SEGMENTED CONTROL FILTER CHIPS */}
       <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
         {[
           { id: 'all', label: 'ทั้งหมด' },
@@ -294,10 +294,10 @@ export const HomePortalView: React.FC<HomePortalViewProps> = ({
             <button
               key={tab.id}
               onClick={() => setSelectedFilter(tab.id as typeof selectedFilter)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all ios-spring cursor-pointer ${
                 isActive
-                  ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs'
-                  : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-slate-800 hover:bg-slate-100'
+                  ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-sm'
+                  : 'ios-glass text-slate-600 dark:text-slate-300 hover:bg-slate-100/80 dark:hover:bg-slate-800/80'
               }`}
             >
               {tab.label}
@@ -306,7 +306,7 @@ export const HomePortalView: React.FC<HomePortalViewProps> = ({
         })}
       </div>
 
-      {/* 📋 4. CLEAN MOBILE LIST TILES (Easy to read & tap!) */}
+      {/* 📋 4. CLEAN iOS GROUPED TILES (Easy to read & tap!) */}
       <div className="space-y-2">
         {filteredCards.map((card) => {
           const IconComponent = card.icon;
@@ -322,10 +322,10 @@ export const HomePortalView: React.FC<HomePortalViewProps> = ({
                   setSelectedPlannedCard(card);
                 }
               }}
-              className={`flex items-center justify-between gap-3 p-3 sm:p-3.5 rounded-2xl border transition-all cursor-pointer active:scale-[0.98] ${
+              className={`flex items-center justify-between gap-3 p-3 sm:p-3.5 rounded-[22px] transition-all cursor-pointer ios-spring ${
                 isReady
-                  ? 'bg-white dark:bg-slate-900 border-slate-200/80 dark:border-slate-800 shadow-xs hover:border-indigo-400'
-                  : 'bg-slate-50/70 dark:bg-slate-900/40 border-dashed border-slate-200 dark:border-slate-800'
+                  ? 'ios-glass shadow-xs hover:border-indigo-400'
+                  : 'bg-slate-50/50 dark:bg-slate-900/30 border border-dashed border-slate-200 dark:border-slate-800'
               }`}
             >
               {/* Left: Rounded Icon */}
@@ -363,22 +363,25 @@ export const HomePortalView: React.FC<HomePortalViewProps> = ({
         })}
       </div>
 
-      {/* 🚀 MODAL FOR PLANNED CARDS */}
+      {/* 🚀 APPLE iOS BOTTOM SHEET FOR PLANNED CARDS */}
       {selectedPlannedCard && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-sm w-full p-5 space-y-4 shadow-2xl border border-slate-200 dark:border-slate-800 text-center animate-scale-up">
-            <div className="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 mx-auto flex items-center justify-center">
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-md flex items-end sm:items-center justify-center animate-fade-in">
+          <div className="ios-glass-bar border-t sm:border rounded-t-[32px] sm:rounded-3xl max-w-md w-full p-5 space-y-4 shadow-2xl animate-slide-up pb-safe text-center">
+            {/* iOS Drag Handle */}
+            <div className="w-10 h-1 bg-slate-300 dark:bg-slate-600 rounded-full mx-auto -mt-1 mb-2 sm:hidden" />
+
+            <div className="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/80 text-indigo-600 dark:text-indigo-400 mx-auto flex items-center justify-center shadow-xs">
               <selectedPlannedCard.icon className="w-6 h-6" />
             </div>
 
             <div>
-              <span className="text-[10px] font-black uppercase text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950 px-2 py-0.5 rounded-full">
+              <span className="text-[10px] font-black uppercase text-amber-600 dark:text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-0.5 rounded-full">
                 เตรียมร่วมออกแบบเร็วๆ นี้
               </span>
-              <h3 className="font-black text-base text-slate-900 dark:text-white mt-1">
+              <h3 className="font-black text-base text-slate-900 dark:text-white mt-1.5">
                 {selectedPlannedCard.title}
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
                 {selectedPlannedCard.plannedNotes || selectedPlannedCard.shortDesc}
               </p>
             </div>
@@ -386,7 +389,7 @@ export const HomePortalView: React.FC<HomePortalViewProps> = ({
             <div className="flex items-center gap-2 pt-2">
               <button
                 onClick={() => setSelectedPlannedCard(null)}
-                className="flex-1 py-2.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition"
+                className="flex-1 py-3 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-2xl transition ios-spring"
               >
                 ปิดหน้าต่าง
               </button>
@@ -395,7 +398,7 @@ export const HomePortalView: React.FC<HomePortalViewProps> = ({
                   setSelectedPlannedCard(null);
                   onNavigateTab('flashcards');
                 }}
-                className="flex-1 py-2.5 text-xs font-black bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md active:scale-95 transition"
+                className="flex-1 py-3 text-xs font-black bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl shadow-md shadow-indigo-600/25 active:scale-95 transition ios-spring"
               >
                 ไปท่องศัพท์ก่อน
               </button>

@@ -15,8 +15,9 @@ import {
   X,
   Target,
   Home,
+  ChevronLeft,
 } from 'lucide-react';
-import { UserProfile } from '../types';
+import { UserProfile, ActiveTab } from '../types';
 import { soundFx } from '../lib/soundFx';
 
 interface HeaderProps {
@@ -28,7 +29,18 @@ interface HeaderProps {
   isDark: boolean;
   onToggleDark: () => void;
   onGoHome?: () => void;
+  activeTab?: ActiveTab;
 }
+
+const TAB_TITLES: Record<string, string> = {
+  home: 'PET B1 Academy',
+  dashboard: 'ภาพรวมการเรียน',
+  flashcards: 'ท่องคำศัพท์ (SRS)',
+  games: 'มินิเกม & แบบฝึก',
+  quiz: 'ควิซวัดระดับ',
+  exam: 'ข้อสอบจำลอง CBT',
+  wordbank: 'คลังคำศัพท์ 520 คำ',
+};
 
 export const Header: React.FC<HeaderProps> = ({
   profile,
@@ -39,6 +51,7 @@ export const Header: React.FC<HeaderProps> = ({
   isDark,
   onToggleDark,
   onGoHome,
+  activeTab = 'home',
 }) => {
   const [soundOn, setSoundOn] = useState(() => soundFx.isEnabled());
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -64,51 +77,67 @@ export const Header: React.FC<HeaderProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isMenuOpen]);
 
+  const isInnerPage = activeTab !== 'home';
+
   return (
-    <header className="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200/70 dark:border-slate-800/70 transition-colors">
-      <div className="max-w-4xl mx-auto px-3.5 sm:px-5 h-14 sm:h-16 flex items-center justify-between gap-3">
-        {/* Sleek Brand Logo (Single-Line, Click to return home) */}
-        <button
-          onClick={onGoHome}
-          className="flex items-center gap-2.5 shrink-0 text-left hover:opacity-80 active:scale-98 transition-all focus:outline-none cursor-pointer"
-          title="กลับหน้าหลัก (Portal Hub)"
-        >
-          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-brand-500 flex items-center justify-center text-white shadow-sm shadow-indigo-500/30 shrink-0">
-            <Sparkles className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
+    <header className="sticky top-0 z-40 ios-glass-bar border-b transition-colors pt-safe">
+      <div className="max-w-md mx-auto px-3.5 h-13 sm:h-14 flex items-center justify-between gap-2 relative">
+        {/* Left: Native iOS Back button OR Brand Logo */}
+        {isInnerPage ? (
+          <button
+            onClick={onGoHome}
+            className="flex items-center gap-0.5 text-indigo-600 dark:text-indigo-400 font-bold text-xs sm:text-sm active:opacity-60 transition-opacity cursor-pointer shrink-0 py-1"
+          >
+            <ChevronLeft className="w-5 h-5 -ml-1 stroke-[2.5]" />
+            <span>หน้าหลัก</span>
+          </button>
+        ) : (
+          <button
+            onClick={onGoHome}
+            className="flex items-center gap-2 min-w-0 text-left hover:opacity-80 active:scale-98 transition-all focus:outline-none cursor-pointer"
+            title="กลับหน้าหลัก (Portal Hub)"
+          >
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-brand-500 flex items-center justify-center text-white shadow-sm shadow-indigo-500/30 shrink-0">
+              <Sparkles className="w-4 h-4" />
+            </div>
+            <div className="flex items-baseline gap-1 min-w-0 truncate">
+              <span className="font-black text-sm tracking-tight text-slate-900 dark:text-white shrink-0">
+                PET B1
+              </span>
+              <span className="font-extrabold text-[11px] text-indigo-600 dark:text-indigo-400 uppercase tracking-wider truncate">
+                Academy
+              </span>
+            </div>
+          </button>
+        )}
+
+        {/* Center: iOS Title (Shown if on inner sub-view) */}
+        {isInnerPage && (
+          <div className="absolute left-1/2 -translate-x-1/2 font-black text-xs sm:text-sm text-slate-800 dark:text-slate-100 truncate max-w-[140px] text-center">
+            {TAB_TITLES[activeTab] || 'PET B1'}
           </div>
-          <div className="flex items-baseline gap-1.5">
-            <span className="font-black text-sm sm:text-base tracking-tight text-slate-900 dark:text-white">
-              PET B1
-            </span>
-            <span className="font-extrabold text-[11px] sm:text-xs text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
-              Academy
-            </span>
-            <span className="hidden sm:inline-block text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-1.5 py-0.5 rounded-md">
-              520 คำ
-            </span>
-          </div>
-        </button>
+        )}
 
         {/* Right Stats & Clean Action Controls */}
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           {/* Daily Goal Badge */}
           <div
-            className="flex items-center gap-1.5 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/70 dark:hover:bg-slate-700/60 border border-slate-200/60 dark:border-slate-700/50 px-2.5 py-1 rounded-full text-xs font-semibold text-slate-700 dark:text-slate-200 transition-colors"
+            className="flex items-center gap-1 sm:gap-1.5 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/70 dark:hover:bg-slate-700/60 border border-slate-200/60 dark:border-slate-700/50 px-2 sm:px-2.5 py-1 rounded-full text-xs font-semibold text-slate-700 dark:text-slate-200 transition-colors"
             title={`เป้าหมายวันนี้: ${profile.studiedTodayCount}/${profile.dailyGoal} คำ (${goalProgress}%)`}
           >
             <Target className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 shrink-0" />
-            <span className="font-bold text-[11px] tabular-nums">
+            <span className="font-bold text-[10px] sm:text-[11px] tabular-nums whitespace-nowrap">
               {profile.studiedTodayCount}/{profile.dailyGoal}
             </span>
           </div>
 
           {/* Streak Badge */}
           <div
-            className="flex items-center gap-1 bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/60 text-amber-700 dark:text-amber-400 px-2.5 py-1 rounded-full text-xs font-bold shadow-2xs whitespace-nowrap"
+            className="flex items-center gap-1 bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/60 text-amber-700 dark:text-amber-400 px-2 sm:px-2.5 py-1 rounded-full text-xs font-bold shadow-2xs whitespace-nowrap"
             title={`เรียนต่อเนื่อง ${profile.streakDays} วัน`}
           >
             <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500 animate-pulse shrink-0" />
-            <span className="font-black text-[11px] tabular-nums">{profile.streakDays}</span>
+            <span className="font-black text-[10px] sm:text-[11px] tabular-nums">{profile.streakDays}</span>
           </div>
 
           {/* Quick Install Button (Visible on tablet/desktop, also in menu) */}
@@ -146,7 +175,7 @@ export const Header: React.FC<HeaderProps> = ({
                       <Zap className="w-4 h-4" />
                     </div>
                     <div>
-                      <span className="text-[10px] text-indigo-200 font-semibold block leading-none">
+                      <span className="text-[10px] text-indigo-200 font-semibold block leading-normal">
                         ผู้เรียนระดับ
                       </span>
                       <strong className="text-xs font-black text-white">

@@ -80,48 +80,38 @@ export function App() {
   };
 
   return (
-    <div className="min-h-full flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-200">
-      {/* Sticky Header */}
-      <Header
-        profile={profile}
-        cloudStatus={cloudStatus}
-        isCloudSyncing={isCloudSyncing}
-        onOpenCloudModal={() => setIsCloudModalOpen(true)}
-        onOpenInstallModal={() => setIsInstallModalOpen(true)}
-        isDark={isDark}
-        onToggleDark={() => setIsDark((d) => !d)}
-        onGoHome={() => handleNavigateTab('home')}
-      />
-
-      {/* Main Content Area */}
-      <main className="flex-1 max-w-2xl w-full mx-auto px-4 pt-4 pb-24">
-        {/* PWA Install Banner */}
-        <InstallAppBanner
-          isOpenModal={isInstallModalOpen}
-          onCloseModal={() => setIsInstallModalOpen(false)}
+    <div className="min-h-screen bg-slate-100/80 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex justify-center">
+      {/* 📱 Apple iOS Mobile Phone Canvas Frame (100% on Mobile, Center Frame on Desktop) */}
+      <div className="w-full max-w-md min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 shadow-2xl relative border-x border-slate-200/50 dark:border-slate-800/50">
+        {/* iOS Frosted Glass Header with Native Back Navigation */}
+        <Header
+          profile={profile}
+          cloudStatus={cloudStatus}
+          isCloudSyncing={isCloudSyncing}
+          onOpenCloudModal={() => setIsCloudModalOpen(true)}
+          onOpenInstallModal={() => setIsInstallModalOpen(true)}
+          isDark={isDark}
+          onToggleDark={() => setIsDark((d) => !d)}
+          onGoHome={() => handleNavigateTab('home')}
+          activeTab={activeTab}
         />
 
-        {/* Breadcrumb back to root portal if on inner tabs */}
-        {activeTab !== 'home' && (
-          <div className="mb-3 flex items-center justify-between">
-            <button
-              onClick={() => handleNavigateTab('home')}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 bg-white/80 dark:bg-slate-900/80 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-800 px-3 py-1.5 rounded-xl shadow-xs transition active:scale-95"
-            >
-              <Home className="w-3.5 h-3.5" />
-              <span>← กลับหน้าหลัก (เมนูเลือกการ์ด)</span>
-            </button>
-          </div>
-        )}
-
-        {/* 1. Root Landing Page: Card Selection Portal */}
-        {activeTab === 'home' && (
-          <HomePortalView
-            stats={stats}
-            profile={profile}
-            onNavigateTab={handleNavigateTab}
+        {/* Main Content Area */}
+        <main className="flex-1 w-full px-3.5 pt-3 pb-24 overflow-x-hidden">
+          {/* PWA Install Banner */}
+          <InstallAppBanner
+            isOpenModal={isInstallModalOpen}
+            onCloseModal={() => setIsInstallModalOpen(false)}
           />
-        )}
+
+          {/* 1. Root Landing Page: Card Selection Portal */}
+          {activeTab === 'home' && (
+            <HomePortalView
+              stats={stats}
+              profile={profile}
+              onNavigateTab={handleNavigateTab}
+            />
+          )}
 
         {/* 2. Vocabulary Dashboard */}
         {activeTab === 'dashboard' && (
@@ -202,6 +192,7 @@ export function App() {
         }}
         focusCount={stats.focus}
       />
+      </div>
     </div>
   );
 }

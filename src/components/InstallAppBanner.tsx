@@ -111,12 +111,15 @@ export const InstallAppBanner: React.FC<InstallAppBannerProps> = ({
         </div>
       )}
 
-      {/* Full Installation Guide Modal */}
+      {/* Full Installation Guide iOS Bottom Sheet */}
       {showModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-md w-full p-5 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-md flex items-end sm:items-center justify-center animate-fade-in">
+          <div className="ios-glass-bar border-t sm:border rounded-t-[32px] sm:rounded-3xl max-w-md w-full p-5 shadow-2xl space-y-4 max-h-[88dvh] overflow-y-auto animate-slide-up pb-safe">
+            {/* iOS Bottom Sheet Drag Handle */}
+            <div className="w-10 h-1 bg-slate-300 dark:bg-slate-600 rounded-full mx-auto -mt-1 mb-2 sm:hidden" />
+
             {/* Modal Header */}
-            <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-200/50 dark:border-slate-800/50">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-xl bg-indigo-100 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
                   <Download className="w-4 h-4" />

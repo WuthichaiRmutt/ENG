@@ -546,31 +546,31 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
         {/* Button 1: Focus */}
         <button
           onClick={handleMarkFocus}
-          className="bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 active:scale-95 border border-rose-200 dark:border-rose-800/60 text-rose-700 dark:text-rose-400 font-bold text-[11px] sm:text-xs py-2.5 px-2 rounded-2xl transition flex flex-col sm:flex-row items-center justify-center gap-1 shadow-xs"
+          className="bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 active:scale-95 border border-rose-200 dark:border-rose-800/60 text-rose-700 dark:text-rose-400 font-bold text-[11px] sm:text-xs py-2 px-1 sm:px-2 min-h-[48px] rounded-2xl transition flex flex-col sm:flex-row items-center justify-center gap-1 shadow-xs text-center leading-tight"
           title="คำนี้ยังไม่แม่น ส่งเข้า Focus Zone เพื่อทบทวนซ้ำ"
         >
           <AlertTriangle className="w-3.5 h-3.5 shrink-0 text-rose-500" />
-          <span className="whitespace-nowrap">ยังไม่แม่น</span>
+          <span>ยังไม่แม่น</span>
         </button>
 
         {/* Button 2: SRS Next Review */}
         <button
           onClick={handleSrsReview}
-          className="bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 active:scale-95 border border-amber-200 dark:border-amber-800/60 text-amber-700 dark:text-amber-400 font-bold text-[11px] sm:text-xs py-2.5 px-2 rounded-2xl transition flex flex-col sm:flex-row items-center justify-center gap-1 shadow-xs"
+          className="bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 active:scale-95 border border-amber-200 dark:border-amber-800/60 text-amber-700 dark:text-amber-400 font-bold text-[11px] sm:text-xs py-2 px-1 sm:px-2 min-h-[48px] rounded-2xl transition flex flex-col sm:flex-row items-center justify-center gap-1 shadow-xs text-center leading-tight"
           title="พอจำได้ เลื่อนกล่องทบทวน SRS ตามรอบ"
         >
           <RotateCw className="w-3.5 h-3.5 shrink-0 text-amber-500" />
-          <span className="whitespace-nowrap">ทบทวนต่อ (SRS)</span>
+          <span>ทบทวนต่อ (SRS)</span>
         </button>
 
         {/* Button 3: Mastered */}
         <button
           onClick={handleMarkMastered}
-          className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-black text-[11px] sm:text-xs py-2.5 px-2 rounded-2xl transition flex flex-col sm:flex-row items-center justify-center gap-1 shadow-md shadow-emerald-600/20"
+          className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-black text-[11px] sm:text-xs py-2 px-1 sm:px-2 min-h-[48px] rounded-2xl transition flex flex-col sm:flex-row items-center justify-center gap-1 shadow-md shadow-emerald-600/20 text-center leading-tight"
           title="จำได้แม่นยำถาวรแล้ว บันทึกลง Mastered Bank และนำออกจากคิวเรียน"
         >
           <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
-          <span className="whitespace-nowrap">จำได้แม่นแล้ว</span>
+          <span>จำได้แม่นแล้ว</span>
         </button>
       </div>
 

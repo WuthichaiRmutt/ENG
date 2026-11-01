@@ -461,7 +461,7 @@ export const MockExamSimulator: React.FC<MockExamSimulatorProps> = ({
     return (
       <div className="space-y-4 pb-20 animate-fade-in relative">
         {/* Sticky Exam Simulator Control Bar */}
-        <div className="sticky top-14 z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md -mx-4 px-4 py-2.5 border-b border-slate-200 dark:border-slate-800 shadow-xs flex items-center justify-between gap-2">
+        <div className="sticky top-13 sm:top-14 z-30 ios-glass-bar -mx-3.5 px-3.5 py-2.5 border-b shadow-xs flex items-center justify-between gap-2">
           {/* Section & Progress */}
           <div className="flex items-center gap-2">
             <span className="text-[11px] font-black uppercase px-2.5 py-1 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200/60 dark:border-indigo-800/60 flex items-center gap-1.5">
@@ -663,13 +663,13 @@ export const MockExamSimulator: React.FC<MockExamSimulatorProps> = ({
                   key={opt.id}
                   type="button"
                   onClick={() => handleSelectAnswer(currentQ.id, opt.id)}
-                  className={`w-full text-left p-3.5 rounded-2xl border transition-all flex items-center justify-between gap-3 cursor-pointer select-none active:scale-[0.99] ${
+                  className={`w-full text-left p-3.5 rounded-2xl border transition-all flex items-center justify-between gap-3 cursor-pointer select-none ios-spring ${
                     isSelected
                       ? 'bg-indigo-50/95 dark:bg-indigo-950/60 border-indigo-600 dark:border-indigo-500 shadow-xs ring-1 ring-indigo-500/30'
-                      : 'bg-slate-50/80 dark:bg-slate-800/50 border-slate-200/80 dark:border-slate-700/80 hover:bg-white dark:hover:bg-slate-800 hover:border-indigo-300'
+                      : 'bg-white/80 dark:bg-slate-800/60 border-slate-200/80 dark:border-slate-700/80 hover:bg-white dark:hover:bg-slate-800 hover:border-indigo-300'
                   }`}
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 min-w-0 flex-1">
                     <span
                       className={`w-7 h-7 rounded-xl flex items-center justify-center text-xs font-black shrink-0 transition ${
                         isSelected
@@ -680,7 +680,7 @@ export const MockExamSimulator: React.FC<MockExamSimulatorProps> = ({
                       {opt.id}
                     </span>
                     <span
-                      className={`text-xs sm:text-sm ${
+                      className={`text-xs sm:text-sm leading-snug break-words ${
                         isSelected
                           ? 'font-bold text-indigo-950 dark:text-indigo-100'
                           : 'font-medium text-slate-700 dark:text-slate-200'

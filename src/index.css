@@ -3,34 +3,48 @@
 @tailwind utilities;
 
 :root {
-  font-family: 'Plus Jakarta Sans', 'Sarabun', system-ui, -apple-system, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Plus Jakarta Sans', 'Sarabun', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Mobile viewport and tap improvements */
+/* Mobile viewport and Samsung/Android font scaling fixes */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 html, body {
   height: 100%;
+  height: 100dvh;
   overscroll-behavior-y: none;
   -webkit-tap-highlight-color: transparent;
-  word-break: normal;
+  word-break: break-word;
   overflow-wrap: break-word;
-  line-break: normal;
   text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
-/* Natural Thai and English word-boundary wrapping */
-h1, h2, h3, h4, h5, h6, p, span, label {
-  word-break: normal;
+/* Natural Thai and English word-boundary wrapping + vowel headroom */
+h1, h2, h3, h4, h5, h6, p, span, label, button, a {
+  word-break: break-word;
   overflow-wrap: break-word;
+}
+
+/* Prevent accidental 300ms mobile tap delays and unwanted double-tap zoom on buttons */
+button, a, input, select, textarea {
+  touch-action: manipulation;
 }
 
 /* Safe area padding for mobile notches and home indicator bar */
 .pb-safe {
-  padding-bottom: max(env(safe-area-inset-bottom, 0px), 12px);
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 16px);
 }
 
 .pt-safe {
-  padding-top: env(safe-area-inset-top, 0px);
+  padding-top: max(env(safe-area-inset-top, 0px), 8px);
 }
 
 /* Hide scrollbar for clean horizontal pill scrolling */
@@ -40,19 +54,74 @@ h1, h2, h3, h4, h5, h6, p, span, label {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
 
-@keyframes fadeIn {
+/* 🍎 Apple iOS Glassmorphism & Vibrant Translucency */
+.ios-glass {
+  background-color: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.dark .ios-glass {
+  background-color: rgba(15, 23, 42, 0.78);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ios-glass-bar {
+  background-color: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+.dark .ios-glass-bar {
+  background-color: rgba(15, 23, 42, 0.82);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* 🍎 iOS Tactile Spring Touch Response */
+.ios-spring {
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.2s ease;
+}
+.ios-spring:active {
+  transform: scale(0.96);
+  opacity: 0.88;
+}
+
+/* 🍎 Apple iOS Keyframe Animations */
+@keyframes iosSlideUp {
+  0% {
+    transform: translateY(100%);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes iosFadeIn {
   from {
     opacity: 0;
-    transform: translateY(4px);
+    transform: scale(0.98) translateY(6px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: scale(1) translateY(0);
   }
 }
 
+.animate-slide-up {
+  animation: iosSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 .animate-fade-in {
-  animation: fadeIn 0.2s ease-out forwards;
+  animation: iosFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
