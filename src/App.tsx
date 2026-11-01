@@ -9,6 +9,7 @@ import { DashboardView } from './components/DashboardView';
 import { FlashcardsView } from './components/FlashcardsView';
 import { GamesHubView } from './components/GamesHubView';
 import { WordBankView } from './components/WordBankView';
+import { MockExamSimulator } from './components/MockExamSimulator';
 import { CloudSyncModal } from './components/CloudSyncModal';
 import { InstallAppBanner } from './components/InstallAppBanner';
 import { getStoredSupabaseConfig } from './lib/supabaseClient';
@@ -164,6 +165,20 @@ export function App() {
             progressMap={progressMap}
             onSetStatus={setWordStatus}
             initialFilter={wordbankFilter}
+          />
+        )}
+
+        {/* 6. Mock Exam Simulator (TOEIC & EnglishScore & Cambridge CBT) */}
+        {activeTab === 'exam' && (
+          <MockExamSimulator
+            onBackToHome={() => handleNavigateTab('home')}
+            onAddXP={addXP}
+            onMarkFocusWord={(wordText) => {
+              const matched = words.find((w) => w.word.toLowerCase() === wordText.toLowerCase());
+              if (matched) {
+                setWordStatus(matched.id, 'focus');
+              }
+            }}
           />
         )}
       </main>

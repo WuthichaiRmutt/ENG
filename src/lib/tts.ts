@@ -56,3 +56,4 @@ class TextToSpeechService {
 }
 
 export const ttsService = new TextToSpeechService();
+export const tts = ttsService;
