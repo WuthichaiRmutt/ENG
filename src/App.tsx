@@ -58,6 +58,41 @@ export function App() {
     setCloudStatus,
   } = useVocabStore();
 
+  // 📱 Mobile Physical / Gesture Back Button Handler via History API
+  useEffect(() => {
+    const validTabs: ActiveTab[] = ['home', 'dashboard', 'flashcards', 'games', 'wordbank', 'exam'];
+
+    // Set initial history state
+    if (!window.location.hash) {
+      window.history.replaceState({ tab: 'home' }, '', '#home');
+    } else {
+      const hashTab = window.location.hash.replace('#', '') as ActiveTab;
+      if (validTabs.includes(hashTab)) {
+        setActiveTab(hashTab);
+      }
+    }
+
+    const handlePopState = (e: PopStateEvent) => {
+      // 1. Close modal first if open
+      if (isCloudModalOpen || isInstallModalOpen) {
+        setIsCloudModalOpen(false);
+        setIsInstallModalOpen(false);
+        return;
+      }
+
+      // 2. Navigate back to previous tab or home (Prevents exiting website!)
+      const targetTab = (e.state?.tab as ActiveTab) || (window.location.hash.replace('#', '') as ActiveTab) || 'home';
+      if (validTabs.includes(targetTab)) {
+        setActiveTab(targetTab);
+      } else {
+        setActiveTab('home');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [isCloudModalOpen, isInstallModalOpen]);
+
   const handleNavigateTab = (tab: ActiveTab, filterMode?: string, gameMode?: GameMode) => {
     if (tab === 'flashcards' && filterMode) {
       setFlashcardFilter(filterMode);
@@ -70,6 +105,12 @@ export function App() {
     } else if (tab === 'games') {
       setGameInitialMode('menu');
     }
+
+    // Push history entry so mobile hardware / swipe back button navigates within app
+    if (tab !== activeTab) {
+      window.history.pushState({ tab }, '', `#${tab}`);
+    }
+
     setActiveTab(tab);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -186,10 +227,7 @@ export function App() {
       {/* Fixed Mobile Bottom Nav */}
       <BottomNav
         activeTab={activeTab}
-        onTabChange={(tab) => {
-          setActiveTab(tab);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
+        onTabChange={(tab) => handleNavigateTab(tab)}
         focusCount={stats.focus}
       />
       </div>

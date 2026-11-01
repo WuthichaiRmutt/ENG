@@ -75,52 +75,77 @@ export const MockExamSimulator: React.FC<MockExamSimulatorProps> = ({
 
   // Launch Dynamic Exam (from question pool)
   const handleStartDynamicExam = (section: FilterSection = 'all', count: number = 20) => {
-    const dynamicQuestions = generateDynamicExam({
-      section,
-      totalCount: count,
-      shuffleChoices,
-    });
+    try {
+      const dynamicQuestions = generateDynamicExam({
+        section,
+        totalCount: count,
+        shuffleChoices,
+      });
 
-    let durationMinutes = 25;
-    let title = 'ชุดสุ่มข้อสอบพิเศษ (Dynamic Exam)';
-    if (section === 'listening') {
-      durationMinutes = 10;
-      title = 'ฝึกพาร์ทการฟัง (Listening Focus)';
-    } else if (section === 'reading') {
-      durationMinutes = 12;
-      title = 'ฝึกพาร์ทการอ่าน (Reading Focus)';
-    } else if (section === 'use_of_english') {
-      durationMinutes = 8;
-      title = 'ฝึกคำศัพท์ & ไวยากรณ์ (Vocab Focus)';
+      let durationMinutes = 25;
+      let title = 'ชุดสุ่มข้อสอบพิเศษ (Dynamic Exam)';
+      if (section === 'listening') {
+        durationMinutes = 10;
+        title = 'ฝึกพาร์ทการฟัง (Listening Focus)';
+      } else if (section === 'reading') {
+        durationMinutes = 12;
+        title = 'ฝึกพาร์ทการอ่าน (Reading Focus)';
+      } else if (section === 'use_of_english') {
+        durationMinutes = 8;
+        title = 'ฝึกคำศัพท์ & ไวยากรณ์ (Vocab Focus)';
+      }
+
+      setExamTitle(title);
+      setQuestions(dynamicQuestions);
+      setCurrentIndex(0);
+      setUserAnswers({});
+      setFlaggedQuestions({});
+      setAudioPlayCount({});
+      setTimeRemaining(durationMinutes * 60);
+      setExamState('in_progress');
+      if (typeof window !== 'undefined') {
+        window.history.pushState({ exam: 'in_progress', tab: 'exam' }, '', '#exam-taking');
+      }
+      soundFx.playCorrect();
+    } catch (e) {
+      console.error('Error starting dynamic exam:', e);
     }
-
-    setExamTitle(title);
-    setQuestions(dynamicQuestions);
-    setCurrentIndex(0);
-    setUserAnswers({});
-    setFlaggedQuestions({});
-    setAudioPlayCount({});
-    setTimeRemaining(durationMinutes * 60);
-    setExamState('in_progress');
-    soundFx.playCorrect();
   };
 
   // Launch Predefined Static Sets
   const handleStartStaticSet = (setNumber: number) => {
-    let chosenSet = MOCK_EXAM_SET_1;
-    if (setNumber === 2) chosenSet = MOCK_EXAM_SET_2;
-    if (setNumber === 3) chosenSet = MOCK_EXAM_SET_3;
+    try {
+      let chosenSet = MOCK_EXAM_SET_1;
+      if (setNumber === 2) chosenSet = MOCK_EXAM_SET_2;
+      if (setNumber === 3) chosenSet = MOCK_EXAM_SET_3;
 
-    setExamTitle(`ชุดข้อสอบมาตรฐาน ชุดที่ ${setNumber}`);
-    setQuestions(chosenSet);
-    setCurrentIndex(0);
-    setUserAnswers({});
-    setFlaggedQuestions({});
-    setAudioPlayCount({});
-    setTimeRemaining(25 * 60);
-    setExamState('in_progress');
-    soundFx.playCorrect();
+      setExamTitle(`ชุดข้อสอบมาตรฐาน ชุดที่ ${setNumber}`);
+      setQuestions(chosenSet);
+      setCurrentIndex(0);
+      setUserAnswers({});
+      setFlaggedQuestions({});
+      setAudioPlayCount({});
+      setTimeRemaining(25 * 60);
+      setExamState('in_progress');
+      if (typeof window !== 'undefined') {
+        window.history.pushState({ exam: 'in_progress', tab: 'exam' }, '', '#exam-taking');
+      }
+      soundFx.playCorrect();
+    } catch (e) {
+      console.error('Error starting static set:', e);
+    }
   };
+
+  // Listen to mobile physical / gesture back button while inside exam
+  useEffect(() => {
+    const handlePopState = () => {
+      if (examState === 'in_progress') {
+        setExamState('lobby');
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [examState]);
 
   // Timer countdown
   useEffect(() => {
@@ -272,9 +297,10 @@ export const MockExamSimulator: React.FC<MockExamSimulatorProps> = ({
         </div>
 
         {/* 🍎 1. Single Primary Hero Card (Apple Clean Card) */}
-        <div
+        <button
+          type="button"
           onClick={() => handleStartDynamicExam('all', 20)}
-          className="bg-gradient-to-br from-purple-600 via-indigo-600 to-indigo-700 text-white rounded-3xl p-5 shadow-lg shadow-indigo-600/20 cursor-pointer ios-spring space-y-3"
+          className="w-full text-left bg-gradient-to-br from-purple-600 via-indigo-600 to-indigo-700 text-white rounded-3xl p-5 shadow-lg shadow-indigo-600/20 cursor-pointer ios-spring space-y-3 block active:scale-[0.98] transition"
         >
           <div className="flex items-center justify-between">
             <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-md text-white flex items-center justify-center">
@@ -296,12 +322,12 @@ export const MockExamSimulator: React.FC<MockExamSimulatorProps> = ({
           </div>
 
           <div className="pt-1">
-            <button className="w-full bg-white text-indigo-700 font-black text-xs py-3 rounded-2xl shadow-sm flex items-center justify-center gap-1.5 active:scale-98 transition">
+            <div className="w-full bg-white text-indigo-700 font-black text-xs py-3 rounded-2xl shadow-sm flex items-center justify-center gap-1.5">
               <Play className="w-3.5 h-3.5 fill-current" />
               <span>เริ่มสอบจับเวลาทันที</span>
-            </button>
+            </div>
           </div>
-        </div>
+        </button>
 
         {/* 🍎 2. Clean Option Toggle Row */}
         <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl p-3.5 border border-slate-200/70 dark:border-white/[0.08] shadow-xs flex items-center justify-between">
@@ -326,9 +352,10 @@ export const MockExamSimulator: React.FC<MockExamSimulatorProps> = ({
           </h3>
 
           <div className="bg-white dark:bg-[#1C1C1E] rounded-3xl shadow-xs border border-slate-200/70 dark:border-white/[0.08] divide-y divide-slate-100 dark:divide-white/[0.06] overflow-hidden">
-            <div
+            <button
+              type="button"
               onClick={() => handleStartDynamicExam('listening', 10)}
-              className="flex items-center justify-between p-3.5 hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors cursor-pointer ios-spring"
+              className="w-full text-left flex items-center justify-between p-3.5 hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors cursor-pointer ios-spring"
             >
               <div className="flex items-center gap-3 min-w-0 flex-1">
                 <div className="w-10 h-10 rounded-2xl bg-purple-500/10 text-purple-500 flex items-center justify-center shrink-0">
@@ -344,11 +371,12 @@ export const MockExamSimulator: React.FC<MockExamSimulatorProps> = ({
                 </div>
               </div>
               <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600 shrink-0 pl-1" />
-            </div>
+            </button>
 
-            <div
+            <button
+              type="button"
               onClick={() => handleStartDynamicExam('reading', 10)}
-              className="flex items-center justify-between p-3.5 hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors cursor-pointer ios-spring"
+              className="w-full text-left flex items-center justify-between p-3.5 hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors cursor-pointer ios-spring"
             >
               <div className="flex items-center gap-3 min-w-0 flex-1">
                 <div className="w-10 h-10 rounded-2xl bg-blue-500/10 text-blue-500 flex items-center justify-center shrink-0">
@@ -364,11 +392,12 @@ export const MockExamSimulator: React.FC<MockExamSimulatorProps> = ({
                 </div>
               </div>
               <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600 shrink-0 pl-1" />
-            </div>
+            </button>
 
-            <div
+            <button
+              type="button"
               onClick={() => handleStartDynamicExam('use_of_english', 10)}
-              className="flex items-center justify-between p-3.5 hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors cursor-pointer ios-spring"
+              className="w-full text-left flex items-center justify-between p-3.5 hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors cursor-pointer ios-spring"
             >
               <div className="flex items-center gap-3 min-w-0 flex-1">
                 <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center shrink-0">
@@ -384,7 +413,7 @@ export const MockExamSimulator: React.FC<MockExamSimulatorProps> = ({
                 </div>
               </div>
               <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600 shrink-0 pl-1" />
-            </div>
+            </button>
           </div>
         </div>
 
@@ -396,10 +425,11 @@ export const MockExamSimulator: React.FC<MockExamSimulatorProps> = ({
 
           <div className="bg-white dark:bg-[#1C1C1E] rounded-3xl shadow-xs border border-slate-200/70 dark:border-white/[0.08] divide-y divide-slate-100 dark:divide-white/[0.06] overflow-hidden">
             {[1, 2, 3].map((setNum) => (
-              <div
+              <button
+                type="button"
                 key={setNum}
                 onClick={() => handleStartStaticSet(setNum)}
-                className="flex items-center justify-between p-3.5 hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors cursor-pointer ios-spring"
+                className="w-full text-left flex items-center justify-between p-3.5 hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors cursor-pointer ios-spring"
               >
                 <div className="flex items-center gap-3 min-w-0 flex-1">
                   <div className="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-slate-200 flex items-center justify-center font-black text-xs shrink-0">
@@ -415,7 +445,7 @@ export const MockExamSimulator: React.FC<MockExamSimulatorProps> = ({
                   </div>
                 </div>
                 <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600 shrink-0 pl-1" />
-              </div>
+              </button>
             ))}
           </div>
         </div>
