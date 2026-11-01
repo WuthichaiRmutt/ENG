@@ -257,189 +257,166 @@ export const MockExamSimulator: React.FC<MockExamSimulatorProps> = ({
   // ==========================================
   if (examState === 'lobby') {
     return (
-      <div className="space-y-6 pb-12 animate-fade-in">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <button
-            onClick={onBackToHome}
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 bg-white/80 dark:bg-slate-900/80 px-3 py-1.5 rounded-xl border border-slate-200/80 dark:border-slate-800 transition"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>กลับหน้าหลัก</span>
-          </button>
-          <span className="text-[11px] font-black uppercase text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-3 py-1 rounded-full border border-indigo-200/60 dark:border-indigo-800/60">
-            Pool Simulator • 45 ข้อสอบพร้อมสุ่ม
+      <div className="space-y-4 pb-20 animate-fade-in text-slate-800 dark:text-slate-100">
+        {/* Apple Clean Title */}
+        <div className="pt-1 pb-1">
+          <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
+            CBT Exam Simulator
           </span>
+          <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mt-0.5">
+            ข้อสอบจำลอง B1
+          </h1>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            จำลองสอบครบทุกพาร์ท ทั้งฟังเสียง อ่านบทความ และจับเวลาจริง
+          </p>
         </div>
 
-        {/* Hero Card */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-violet-700 via-indigo-700 to-purple-800 text-white p-6 sm:p-8 shadow-xl shadow-indigo-600/20">
-          <div className="relative z-10 space-y-3">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-[11px] font-black tracking-wide uppercase">
-              <Award className="w-3.5 h-3.5 text-amber-300" />
-              Dynamic Exam Assembly Engine
+        {/* 🍎 1. Single Primary Hero Card (Apple Clean Card) */}
+        <div
+          onClick={() => handleStartDynamicExam('all', 20)}
+          className="bg-gradient-to-br from-purple-600 via-indigo-600 to-indigo-700 text-white rounded-3xl p-5 shadow-lg shadow-indigo-600/20 cursor-pointer ios-spring space-y-3"
+        >
+          <div className="flex items-center justify-between">
+            <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-md text-white flex items-center justify-center">
+              <Trophy className="w-5 h-5 text-amber-300" />
             </div>
-            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white">
-              ระบบจำลองการสอบสุ่มข้อสอบอัจฉริยะ (CBT)
-            </h1>
-            <p className="text-xs sm:text-sm text-indigo-100 max-w-xl leading-relaxed">
-              สุ่มข้อสอบจากคลังข้อสอบ (Question Pool) ไม่ซ้ำเดิมทุกครั้งที่เข้าสอบ หรือเลือกสอบตามชุดมาตรฐาน พร้อมพาร์ทฟังเสียง (Listening), อ่านบทความ (Reading) และคำศัพท์ (Use of English)
-            </p>
+            <div className="flex items-center gap-1 text-xs font-bold bg-white/20 px-3 py-1 rounded-full">
+              <Clock className="w-3.5 h-3.5 text-amber-300" />
+              <span>25 นาที</span>
+            </div>
+          </div>
 
-            {/* Toggle Shuffler Options */}
-            <div className="pt-2 flex items-center gap-2">
-              <label className="inline-flex items-center gap-2 cursor-pointer bg-white/15 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-bold text-white hover:bg-white/25 transition">
-                <input
-                  type="checkbox"
-                  checked={shuffleChoices}
-                  onChange={(e) => setShuffleChoices(e.target.checked)}
-                  className="rounded text-indigo-600 focus:ring-0 w-3.5 h-3.5"
-                />
-                <Shuffle className="w-3 h-3 text-amber-300" />
-                <span>สลับตำแหน่งช้อยส์ (A, B, C, D) ทุกรอบ</span>
-              </label>
-            </div>
+          <div>
+            <h2 className="text-lg font-black tracking-tight text-white">
+              ชุดข้อสอบจำลองเต็ม (Full CBT)
+            </h2>
+            <p className="text-xs text-indigo-100/90 mt-0.5 leading-relaxed">
+              สุ่ม 20 ข้อจากคลัง • ฟังเสียง 7 ข้อ + อ่านบทความ 7 ข้อ + ไวยากรณ์ 6 ข้อ
+            </p>
+          </div>
+
+          <div className="pt-1">
+            <button className="w-full bg-white text-indigo-700 font-black text-xs py-3 rounded-2xl shadow-sm flex items-center justify-center gap-1.5 active:scale-98 transition">
+              <Play className="w-3.5 h-3.5 fill-current" />
+              <span>เริ่มสอบจับเวลาทันที</span>
+            </button>
           </div>
         </div>
 
-        {/* 🎲 SECTION 1: DYNAMIC RANDOM EXAM (RECOMMENDED) */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-black text-slate-800 dark:text-slate-100 flex items-center gap-2">
-              <Shuffle className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-              <span>สุ่มชุดข้อสอบใหม่จากคลัง (Dynamic Pool)</span>
-            </h2>
-            <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 dark:bg-indigo-950 px-2 py-0.5 rounded-full">
-              ไม่จำเจ ไม่ซ้ำข้อ
+        {/* 🍎 2. Clean Option Toggle Row */}
+        <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl p-3.5 border border-slate-200/70 dark:border-white/[0.08] shadow-xs flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <Shuffle className="w-4 h-4 text-indigo-500" />
+            <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
+              สลับตำแหน่งตัวเลือก (A, B, C, D) ทุกรอบ
             </span>
           </div>
+          <input
+            type="checkbox"
+            checked={shuffleChoices}
+            onChange={(e) => setShuffleChoices(e.target.checked)}
+            className="w-4 h-4 rounded text-indigo-600 focus:ring-0 cursor-pointer"
+          />
+        </div>
 
-          <div
-            onClick={() => handleStartDynamicExam('all', 20)}
-            className="group bg-gradient-to-r from-indigo-500 via-indigo-600 to-violet-600 text-white rounded-3xl p-5 shadow-lg shadow-indigo-500/20 cursor-pointer active:scale-98 transition-all relative overflow-hidden"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md text-white flex items-center justify-center shadow-md">
-                  <Trophy className="w-6 h-6 text-amber-300" />
+        {/* 🍎 3. Inset Grouped Section: Skill Focus */}
+        <div className="space-y-2 pt-1">
+          <h3 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider px-1">
+            ฝึกเฉพาะทักษะ (Skill Focus)
+          </h3>
+
+          <div className="bg-white dark:bg-[#1C1C1E] rounded-3xl shadow-xs border border-slate-200/70 dark:border-white/[0.08] divide-y divide-slate-100 dark:divide-white/[0.06] overflow-hidden">
+            <div
+              onClick={() => handleStartDynamicExam('listening', 10)}
+              className="flex items-center justify-between p-3.5 hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors cursor-pointer ios-spring"
+            >
+              <div className="flex items-center gap-3 min-w-0 flex-1">
+                <div className="w-10 h-10 rounded-2xl bg-purple-500/10 text-purple-500 flex items-center justify-center shrink-0">
+                  <Headphones className="w-5 h-5" />
                 </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-black text-base text-white">
-                      สุ่มชุดข้อสอบเต็ม 20 ข้อ (Full Dynamic Exam)
-                    </h3>
-                    <span className="text-[9px] font-black bg-amber-400 text-slate-900 px-2 py-0.5 rounded-full uppercase">
-                      สุ่มใหม่ทุกครั้ง 🎲
-                    </span>
-                  </div>
-                  <p className="text-xs text-indigo-100 mt-0.5">
-                    🎧 Listening 7 ข้อ + 📖 Reading 7 ข้อ + ✍️ Use of English 6 ข้อ
+                <div className="min-w-0 flex-1">
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">
+                    ฝึกพาร์ทการฟัง (Listening)
+                  </h4>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                    สุ่ม 10 ข้อ • จับเวลา 10 นาที • มีเสียงอ่านสำเนียงมาตรฐาน
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-1 text-xs font-bold bg-white/20 backdrop-blur-sm px-2.5 py-1 rounded-full shrink-0">
-                <Clock className="w-3.5 h-3.5 text-amber-300" />
-                <span>25 นาที</span>
-              </div>
+              <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600 shrink-0 pl-1" />
             </div>
 
-            <div className="mt-4 pt-3 border-t border-white/20 flex items-center justify-between text-xs">
-              <span className="text-indigo-100 font-medium">
-                ดึงข้อสอบสลับผสมจากคลัง 45 ข้อ พร้อมสลับช้อยส์ A, B, C, D
-              </span>
-              <span className="font-black text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                กดสุ่มและเริ่มสอบ <ArrowRight className="w-3.5 h-3.5" />
-              </span>
+            <div
+              onClick={() => handleStartDynamicExam('reading', 10)}
+              className="flex items-center justify-between p-3.5 hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors cursor-pointer ios-spring"
+            >
+              <div className="flex items-center gap-3 min-w-0 flex-1">
+                <div className="w-10 h-10 rounded-2xl bg-blue-500/10 text-blue-500 flex items-center justify-center shrink-0">
+                  <BookOpen className="w-5 h-5" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">
+                    ฝึกพาร์ทการอ่าน (Reading)
+                  </h4>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                    สุ่ม 10 ข้อ • จับเวลา 12 นาที • อ่านจับใจความบทความสั้น
+                  </p>
+                </div>
+              </div>
+              <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600 shrink-0 pl-1" />
+            </div>
+
+            <div
+              onClick={() => handleStartDynamicExam('use_of_english', 10)}
+              className="flex items-center justify-between p-3.5 hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors cursor-pointer ios-spring"
+            >
+              <div className="flex items-center gap-3 min-w-0 flex-1">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center shrink-0">
+                  <Brain className="w-5 h-5" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">
+                    ฝึกคำศัพท์ & ไวยากรณ์ (Vocab & Grammar)
+                  </h4>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                    สุ่ม 10 ข้อ • จับเวลา 8 นาที • โครงสร้างไวยากรณ์ B1
+                  </p>
+                </div>
+              </div>
+              <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600 shrink-0 pl-1" />
             </div>
           </div>
         </div>
 
-        {/* 📚 SECTION 2: OFFICIAL PRESET EXAM SETS */}
-        <div className="space-y-3 pt-2">
-          <h2 className="text-sm font-black text-slate-800 dark:text-slate-100 flex items-center gap-2">
-            <Layers className="w-4 h-4 text-emerald-600" />
-            <span>ชุดข้อสอบทางการ (Standard Exam Sets 1-3)</span>
-          </h2>
+        {/* 🍎 4. Inset Grouped Section: Official Preset Sets */}
+        <div className="space-y-2 pt-1">
+          <h3 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider px-1">
+            ชุดข้อสอบทางการ (Standard Sets)
+          </h3>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="bg-white dark:bg-[#1C1C1E] rounded-3xl shadow-xs border border-slate-200/70 dark:border-white/[0.08] divide-y divide-slate-100 dark:divide-white/[0.06] overflow-hidden">
             {[1, 2, 3].map((setNum) => (
               <div
                 key={setNum}
                 onClick={() => handleStartStaticSet(setNum)}
-                className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-emerald-500 dark:hover:border-emerald-500 rounded-2xl p-4 cursor-pointer active:scale-98 transition shadow-xs group"
+                className="flex items-center justify-between p-3.5 hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors cursor-pointer ios-spring"
               >
-                <div className="flex items-center justify-between">
-                  <span className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 font-black text-xs flex items-center justify-center">
+                <div className="flex items-center gap-3 min-w-0 flex-1">
+                  <div className="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-slate-200 flex items-center justify-center font-black text-xs shrink-0">
                     #{setNum}
-                  </span>
-                  <span className="text-[10px] font-bold text-slate-400">20 ข้อ</span>
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">
+                      ข้อสอบทางการ ชุดที่ {setNum}
+                    </h4>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                      Cambridge B1 มาตรฐาน • 20 ข้อ
+                    </p>
+                  </div>
                 </div>
-                <h4 className="font-black text-xs sm:text-sm text-slate-900 dark:text-white mt-2.5 group-hover:text-emerald-600 transition">
-                  Official Set {setNum}
-                </h4>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                  ชุดข้อสอบ B1 มาตรฐานชุดที่ {setNum}
-                </p>
+                <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600 shrink-0 pl-1" />
               </div>
             ))}
-          </div>
-        </div>
-
-        {/* 🎯 SECTION 3: SKILL FOCUS PRACTICE (เฉพาะพาร์ท) */}
-        <div className="space-y-3 pt-2">
-          <h2 className="text-sm font-black text-slate-800 dark:text-slate-100 flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-amber-500" />
-            <span>ฝึกเฉพาะทักษะ (Skill Focus Practice)</span>
-          </h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {/* Listening Focus */}
-            <div
-              onClick={() => handleStartDynamicExam('listening', 10)}
-              className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-4 hover:border-purple-500 cursor-pointer active:scale-98 transition shadow-xs group"
-            >
-              <div className="w-9 h-9 rounded-xl bg-purple-50 dark:bg-purple-950 text-purple-600 dark:text-purple-400 flex items-center justify-center">
-                <Headphones className="w-4.5 h-4.5" />
-              </div>
-              <h4 className="font-black text-xs sm:text-sm text-slate-800 dark:text-slate-100 mt-2.5 group-hover:text-purple-600 transition">
-                ฝึกการฟัง (Listening)
-              </h4>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                สุ่ม 10 ข้อ • จับเวลา 10 นาที
-              </p>
-            </div>
-
-            {/* Reading Focus */}
-            <div
-              onClick={() => handleStartDynamicExam('reading', 10)}
-              className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-4 hover:border-blue-500 cursor-pointer active:scale-98 transition shadow-xs group"
-            >
-              <div className="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 flex items-center justify-center">
-                <BookOpen className="w-4.5 h-4.5" />
-              </div>
-              <h4 className="font-black text-xs sm:text-sm text-slate-800 dark:text-slate-100 mt-2.5 group-hover:text-blue-600 transition">
-                ฝึกการอ่าน (Reading)
-              </h4>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                สุ่ม 10 ข้อ • จับเวลา 12 นาที
-              </p>
-            </div>
-
-            {/* Vocab Focus */}
-            <div
-              onClick={() => handleStartDynamicExam('use_of_english', 10)}
-              className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-4 hover:border-emerald-500 cursor-pointer active:scale-98 transition shadow-xs group"
-            >
-              <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
-                <Brain className="w-4.5 h-4.5" />
-              </div>
-              <h4 className="font-black text-xs sm:text-sm text-slate-800 dark:text-slate-100 mt-2.5 group-hover:text-emerald-600 transition">
-                คำศัพท์ & แกรมม่า
-              </h4>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                สุ่ม 10 ข้อ • จับเวลา 8 นาที
-              </p>
-            </div>
           </div>
         </div>
       </div>

@@ -137,129 +137,96 @@ export const GamesHubView: React.FC<GamesHubViewProps> = ({
         </div>
       </div>
 
-      {/* Mode Selection Header */}
-      <div className="px-1 pt-1">
-        <h3 className="text-base font-black text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
-          <span>🎮</span> ศูนย์รวมเกมและการทดสอบ
+      {/* 🍎 Mode Selection Section */}
+      <div className="space-y-2 pt-1">
+        <h3 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider px-1">
+          เลือกเกมฝึกคำศัพท์
         </h3>
-        <p className="text-xs text-slate-400 mt-0.5">เลือกโหมดการเรียนรู้ที่ต้องการฝึกฝนเพื่อรับ XP</p>
-      </div>
 
-      {/* 3 Game Cards */}
-      <div className="space-y-3">
-        {/* Game 1: Speed Match */}
-        <div
-          onClick={() => setActiveMode('speed_match')}
-          className="group bg-white dark:bg-slate-900 border border-amber-200/90 dark:border-amber-900/60 hover:border-amber-500 rounded-3xl p-4 shadow-sm transition-all cursor-pointer active:scale-98 flex items-center justify-between gap-3 relative overflow-hidden"
-        >
-          <div className="flex items-center gap-3.5 min-w-0">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-400 to-orange-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-amber-500/30 group-hover:scale-105 transition-transform">
-              <Zap className="w-6 h-6 fill-white" />
-            </div>
-            <div className="min-w-0">
-              <div className="flex items-center gap-1.5">
-                <h4 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-slate-50">
+        {/* Apple Inset Grouped List */}
+        <div className="bg-white dark:bg-[#1C1C1E] rounded-3xl shadow-xs border border-slate-200/70 dark:border-white/[0.08] divide-y divide-slate-100 dark:divide-white/[0.06] overflow-hidden">
+          {/* Game 1: Speed Match */}
+          <div
+            onClick={() => setActiveMode('speed_match')}
+            className="flex items-center justify-between p-3.5 hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors cursor-pointer ios-spring"
+          >
+            <div className="flex items-center gap-3 min-w-0 flex-1">
+              <div className="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center shrink-0">
+                <Zap className="w-5 h-5 fill-current" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">
                   Speed Match (จับคู่ด่วน)
                 </h4>
-                <span className="text-[10px] font-bold bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 px-2 py-0.5 rounded-full whitespace-nowrap">
-                  ยอดฮิต 🔥
-                </span>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5">
+                  จับคู่ศัพท์อังกฤษกับความหมาย แข่งเวลา 45 วินาที
+                </p>
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">
-                จับคู่ศัพท์อังกฤษกับความหมาย แข่งกับเวลา 45 วินาที มี Combo!
-              </p>
             </div>
+            <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600 shrink-0 pl-1" />
           </div>
 
-          <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 group-hover:text-amber-500 group-hover:translate-x-0.5 transition-all shrink-0">
-            <ChevronRight className="w-4 h-4" />
-          </div>
-        </div>
-
-        {/* Game 2: Listening Challenge */}
-        <div
-          onClick={() => setActiveMode('listening')}
-          className="group bg-white dark:bg-slate-900 border border-purple-200/90 dark:border-purple-900/60 hover:border-purple-500 rounded-3xl p-4 shadow-sm transition-all cursor-pointer active:scale-98 flex items-center justify-between gap-3 relative overflow-hidden"
-        >
-          <div className="flex items-center gap-3.5 min-w-0">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-500 to-indigo-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-purple-500/30 group-hover:scale-105 transition-transform">
-              <Headphones className="w-6 h-6" />
-            </div>
-            <div className="min-w-0">
-              <div className="flex items-center gap-1.5">
-                <h4 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-slate-50">
-                  Listening Challenge
+          {/* Game 2: Listening Challenge */}
+          <div
+            onClick={() => setActiveMode('listening')}
+            className="flex items-center justify-between p-3.5 hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors cursor-pointer ios-spring"
+          >
+            <div className="flex items-center gap-3 min-w-0 flex-1">
+              <div className="w-10 h-10 rounded-2xl bg-purple-500/10 text-purple-500 flex items-center justify-center shrink-0">
+                <Headphones className="w-5 h-5" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">
+                  Listening Challenge (ฟังเสียงอ่าน)
                 </h4>
-                <span className="text-[10px] font-bold bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-400 px-2 py-0.5 rounded-full whitespace-nowrap">
-                  ฝึกทักษะหู 🎧
-                </span>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5">
+                  ฟังเสียงอ่านสำเนียงเจ้าของภาษา แล้วทายคำแปลที่ถูกต้อง
+                </p>
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">
-                ฟังเสียงอ่านเจ้าของภาษา ปิดตัวหนังสือแล้วทายคำแปลที่ถูกต้อง
-              </p>
             </div>
+            <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600 shrink-0 pl-1" />
           </div>
 
-          <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 group-hover:text-purple-500 group-hover:translate-x-0.5 transition-all shrink-0">
-            <ChevronRight className="w-4 h-4" />
-          </div>
-        </div>
-
-        {/* Game 3: Contextual Cloze Test */}
-        <div
-          onClick={() => setActiveMode('cloze')}
-          className="group bg-white dark:bg-slate-900 border border-emerald-200/90 dark:border-emerald-900/60 hover:border-emerald-500 rounded-3xl p-4 shadow-sm transition-all cursor-pointer active:scale-98 flex items-center justify-between gap-3 relative overflow-hidden"
-        >
-          <div className="flex items-center gap-3.5 min-w-0">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-emerald-500/30 group-hover:scale-105 transition-transform">
-              <FileText className="w-6 h-6" />
-            </div>
-            <div className="min-w-0">
-              <div className="flex items-center gap-1.5">
-                <h4 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-slate-50">
+          {/* Game 3: Contextual Cloze Test */}
+          <div
+            onClick={() => setActiveMode('cloze')}
+            className="flex items-center justify-between p-3.5 hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors cursor-pointer ios-spring"
+          >
+            <div className="flex items-center gap-3 min-w-0 flex-1">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center shrink-0">
+                <FileText className="w-5 h-5" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">
                   Contextual Cloze (เติมคำในประโยค)
                 </h4>
-                <span className="text-[10px] font-bold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded-full whitespace-nowrap">
-                  แนวข้อสอบจริง 📝
-                </span>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5">
+                  เลือกรูปคำศัพท์และ Part of Speech ที่ถูกต้องลงในบริบท
+                </p>
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">
-                ฝึกเลือกรูปคำศัพท์และ Part of Speech ที่ถูกต้องลงในบริบท พร้อมเฉลยไวยากรณ์ละเอียด
-              </p>
             </div>
+            <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600 shrink-0 pl-1" />
           </div>
 
-          <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 group-hover:text-emerald-500 group-hover:translate-x-0.5 transition-all shrink-0">
-            <ChevronRight className="w-4 h-4" />
-          </div>
-        </div>
-
-        {/* Game 4: Multiple Choice Quiz */}
-        <div
-          onClick={() => setActiveMode('quiz')}
-          className="group bg-white dark:bg-slate-900 border border-indigo-200/90 dark:border-indigo-900/60 hover:border-indigo-500 rounded-3xl p-4 shadow-sm transition-all cursor-pointer active:scale-98 flex items-center justify-between gap-3 relative overflow-hidden"
-        >
-          <div className="flex items-center gap-3.5 min-w-0">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-500 to-brand-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-indigo-500/30 group-hover:scale-105 transition-transform">
-              <Brain className="w-6 h-6" />
-            </div>
-            <div className="min-w-0">
-              <div className="flex items-center gap-1.5">
-                <h4 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-slate-50">
-                  แบบทดสอบ 4 ตัวเลือก
+          {/* Game 4: Multiple Choice Quiz */}
+          <div
+            onClick={() => setActiveMode('quiz')}
+            className="flex items-center justify-between p-3.5 hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors cursor-pointer ios-spring"
+          >
+            <div className="flex items-center gap-3 min-w-0 flex-1">
+              <div className="w-10 h-10 rounded-2xl bg-pink-500/10 text-pink-500 flex items-center justify-center shrink-0">
+                <Brain className="w-5 h-5" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">
+                  แบบทดสอบ 4 ตัวเลือก (Quiz)
                 </h4>
-                <span className="text-[10px] font-bold bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-400 px-2 py-0.5 rounded-full whitespace-nowrap">
-                  วัดผลแม่นยำ 🎯
-                </span>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5">
+                  แบบทดสอบความจำ 10 ข้อ มีจับเวลาและเก็บคะแนน XP
+                </p>
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">
-                แบบทดสอบคำศัพท์ 10 ข้อ คำที่ตอบผิดจะถูกส่งเข้า Focus Zone ทันที
-              </p>
             </div>
-          </div>
-
-          <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 group-hover:text-indigo-500 group-hover:translate-x-0.5 transition-all shrink-0">
-            <ChevronRight className="w-4 h-4" />
+            <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600 shrink-0 pl-1" />
           </div>
         </div>
       </div>

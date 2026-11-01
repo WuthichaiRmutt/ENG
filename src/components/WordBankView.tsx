@@ -61,16 +61,16 @@ export const WordBankView: React.FC<WordBankViewProps> = ({
   };
 
   return (
-    <div className="space-y-4 pb-8 max-w-2xl mx-auto">
-      {/* Search Input Bar */}
+    <div className="space-y-3.5 pb-20 max-w-md mx-auto text-slate-800 dark:text-slate-100 animate-fade-in">
+      {/* Search Input Bar (Apple Spotlight style) */}
       <div className="relative">
         <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="ค้นหาคำศัพท์ภาษาอังกฤษ หรือความหมายภาษาไทย..."
-          className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition shadow-xs text-slate-800 dark:text-slate-100 placeholder:text-slate-400"
+          placeholder="ค้นหาคำศัพท์ หรือความหมาย..."
+          className="w-full bg-slate-100 dark:bg-[#1C1C1E] border border-slate-200/60 dark:border-white/[0.08] rounded-2xl pl-10 pr-10 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition text-slate-800 dark:text-slate-100 placeholder:text-slate-400"
         />
         {searchQuery && (
           <button
@@ -86,17 +86,17 @@ export const WordBankView: React.FC<WordBankViewProps> = ({
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs font-semibold">
         {[
           { id: 'all', label: 'ทั้งหมด' },
-          { id: 'mastered', label: 'รู้แล้ว' },
+          { id: 'mastered', label: 'จำได้แล้ว' },
           { id: 'focus', label: 'ยังไม่แม่น' },
-          { id: 'normal', label: 'ยังไม่ได้จัดหมวด' },
+          { id: 'normal', label: 'ยังไม่จัดหมวด' },
         ].map((f) => (
           <button
             key={f.id}
             onClick={() => setSelectedStatus(f.id)}
-            className={`px-3 py-1.5 rounded-full transition shrink-0 ${
+            className={`px-3 py-1.5 rounded-full transition shrink-0 ios-spring ${
               selectedStatus === f.id
-                ? 'bg-indigo-600 text-white shadow-xs'
-                : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:border-slate-300'
+                ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs'
+                : 'bg-white dark:bg-[#1C1C1E] text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-white/[0.08]'
             }`}
           >
             {f.label}
@@ -107,9 +107,9 @@ export const WordBankView: React.FC<WordBankViewProps> = ({
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
-          className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 rounded-full px-3 py-1.5 text-xs font-semibold focus:outline-none shrink-0"
+          className="bg-white dark:bg-[#1C1C1E] border border-slate-200/80 dark:border-white/[0.08] text-slate-600 dark:text-slate-300 rounded-full px-3 py-1.5 text-xs font-semibold focus:outline-none shrink-0"
         >
-          <option value="all">ทุกหมวดหมู่ ({categories.length})</option>
+          <option value="all">ทุกหมวด ({categories.length})</option>
           {categories.map((c) => (
             <option key={c} value={c}>
               {c}
@@ -120,8 +120,8 @@ export const WordBankView: React.FC<WordBankViewProps> = ({
 
       {/* Results Header */}
       <div className="flex items-center justify-between text-xs text-slate-400 font-medium px-1">
-        <span>พบ {filteredWords.length} รายการ</span>
-        <span>แตะที่แถวเพื่อดูตัวอย่างประโยค</span>
+        <span>พบ {filteredWords.length} คำ</span>
+        <span>แตะที่แถวเพื่อดูตัวอย่าง</span>
       </div>
 
       {/* Word List */}
@@ -140,10 +140,10 @@ export const WordBankView: React.FC<WordBankViewProps> = ({
               <div
                 key={w.id}
                 onClick={() => toggleExpand(w.id)}
-                className={`bg-white dark:bg-slate-900 border rounded-2xl p-3.5 transition-all cursor-pointer shadow-xs ${
+                className={`bg-white dark:bg-[#1C1C1E] border rounded-2xl p-3.5 transition-all cursor-pointer shadow-xs ${
                   isExpanded
                     ? 'border-indigo-500/50 dark:border-indigo-500/50 shadow-sm'
-                    : 'border-slate-200/80 dark:border-slate-800/80 hover:border-slate-300 dark:hover:border-slate-700'
+                    : 'border-slate-200/70 dark:border-white/[0.08] hover:border-slate-300 dark:hover:border-slate-700'
                 }`}
               >
                 <div className="flex items-center justify-between gap-3">

@@ -274,65 +274,62 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
     <div className="space-y-3.5 pb-8 max-w-md mx-auto animate-fade-in">
       {/* Top Filter Chips */}
       <div className="flex items-center justify-between gap-1.5 overflow-x-auto pb-1 no-scrollbar">
-        <div className="flex items-center gap-1.5 shrink-0 text-[11px] sm:text-xs">
+        <div className="flex items-center gap-1.5 shrink-0 text-xs font-semibold">
           {/* Smart Queue: To Learn */}
           <button
             onClick={() => handleFilterChange('learning')}
-            className={`px-3 py-1.5 rounded-full font-bold transition whitespace-nowrap ${
+            className={`px-3 py-1.5 rounded-full transition whitespace-nowrap ios-spring ${
               filterMode === 'learning'
-                ? 'bg-indigo-600 text-white shadow-xs'
-                : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-indigo-300'
+                ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs'
+                : 'bg-white dark:bg-[#1C1C1E] text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-white/[0.08]'
             }`}
-            title="แสดงคำศัพท์ที่ยังไม่ผ่านเกณฑ์จำได้แม่นยำ"
           >
-            🎯 กำลังเรียน ({unmasteredCount})
+            กำลังเรียน ({unmasteredCount})
           </button>
 
           {/* Focus Zone */}
           <button
             onClick={() => handleFilterChange('focus')}
-            className={`px-2.5 py-1.5 rounded-full font-bold transition flex items-center gap-1 whitespace-nowrap ${
+            className={`px-3 py-1.5 rounded-full transition whitespace-nowrap ios-spring ${
               filterMode === 'focus'
                 ? 'bg-rose-600 text-white shadow-xs'
-                : 'bg-white dark:bg-slate-800 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900/50'
+                : 'bg-white dark:bg-[#1C1C1E] text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900/50'
             }`}
           >
-            <AlertTriangle className="w-3 h-3 shrink-0" />
-            <span>ยังไม่แม่น ({focusCount})</span>
+            ยังไม่แม่น ({focusCount})
           </button>
 
           {/* Due Review */}
           <button
             onClick={() => handleFilterChange('due')}
-            className={`px-2.5 py-1.5 rounded-full font-bold transition whitespace-nowrap ${
+            className={`px-3 py-1.5 rounded-full transition whitespace-nowrap ios-spring ${
               filterMode === 'due'
                 ? 'bg-amber-600 text-white shadow-xs'
-                : 'bg-white dark:bg-slate-800 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-900/50'
+                : 'bg-white dark:bg-[#1C1C1E] text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-900/50'
             }`}
           >
-            ⏰ ถึงรอบ ({dueCount})
+            ถึงรอบ ({dueCount})
           </button>
 
           {/* Mastered */}
           <button
             onClick={() => handleFilterChange('mastered')}
-            className={`px-2.5 py-1.5 rounded-full font-bold transition flex items-center gap-1 whitespace-nowrap ${
+            className={`px-3 py-1.5 rounded-full transition whitespace-nowrap ios-spring ${
               filterMode === 'mastered'
                 ? 'bg-emerald-600 text-white shadow-xs'
-                : 'bg-white dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/50'
+                : 'bg-white dark:bg-[#1C1C1E] text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/50'
             }`}
           >
-            <CheckCircle2 className="w-3 h-3 shrink-0" />
-            <span>รู้แล้ว ({masteredCount})</span>
+            จำได้แล้ว ({masteredCount})
           </button>
 
           {/* All Words */}
           <button
             onClick={() => handleFilterChange('all')}
-            className={`px-2.5 py-1.5 rounded-full font-bold transition whitespace-nowrap ${
+            className={`px-3 py-1.5 rounded-full transition whitespace-nowrap ios-spring ${
               filterMode === 'all'
                 ? 'bg-slate-800 text-white dark:bg-slate-200 dark:text-slate-900 shadow-xs'
-                : 'bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700'
+                : 'bg-white dark:bg-[#1C1C1E] text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-white/[0.08]'
             }`}
           >
             ทั้งหมด ({words.length})
@@ -341,7 +338,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
 
         <button
           onClick={handleShuffle}
-          className="p-1.5 rounded-full bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:text-indigo-600 transition shrink-0 ml-1 shadow-2xs"
+          className="p-2 rounded-full bg-white dark:bg-[#1C1C1E] text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-white/[0.08] hover:text-indigo-600 transition shrink-0 ml-1 shadow-2xs ios-spring"
           title="สลับการ์ดแบบสุ่ม (Shuffle)"
         >
           <Shuffle className="w-3.5 h-3.5" />
