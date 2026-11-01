@@ -13,23 +13,22 @@ class TextToSpeechService {
   constructor() {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       this.synth = window.speechSynthesis;
-      this.initVoices();
+      this.refreshVoices();
       if (this.synth.onvoiceschanged !== undefined) {
-        this.synth.onvoiceschanged = () => this.initVoices();
+        this.synth.onvoiceschanged = () => this.refreshVoices();
       }
     }
   }
 
-  private initVoices() {
+  public refreshVoices() {
     if (!this.synth) return;
     const voices = this.synth.getVoices();
     if (!voices || voices.length === 0) return;
 
-    const englishVoices = voices.filter((v) => v.lang.startsWith('en'));
+    const englishVoices = voices.filter((v) => v.lang.toLowerCase().startsWith('en'));
 
-    // Male voice keywords across Windows, macOS/iOS, and Android
-    const maleKeywords = [
-      'male',
+    // Comprehensive list of male voice names across Windows, Android, macOS, and iOS
+    const maleNames = [
       'david',
       'george',
       'daniel',
@@ -37,16 +36,30 @@ class TextToSpeechService {
       'guy',
       'ryan',
       'james',
-      'brian',
+      'alex',
+      'fred',
+      'aaron',
       'arthur',
-      'alec',
+      'brian',
+      'mark',
       'richard',
+      'tom',
       'thomas',
+      'john',
+      'paul',
+      'andrew',
+      'steven',
+      'matthew',
+      'william',
+      'edward',
+      'charles',
+      'male',
     ];
 
-    // Female voice keywords
-    const femaleKeywords = [
+    // Explicit female identifiers to strictly avoid
+    const femaleNames = [
       'female',
+      'woman',
       'zira',
       'susan',
       'hazel',
@@ -56,27 +69,47 @@ class TextToSpeechService {
       'fiona',
       'moira',
       'catherine',
+      'jenny',
+      'ava',
+      'aria',
+      'emma',
+      'serena',
+      'stephanie',
+      'linda',
+      'heather',
+      'kendra',
+      'kimberly',
+      'salli',
+      'joanna',
+      'ivy',
+      'amy',
     ];
 
-    // Find best male English voice
-    this.maleVoice =
-      englishVoices.find((v) =>
-        maleKeywords.some((k) => v.name.toLowerCase().includes(k)) &&
-        (v.name.includes('Natural') || v.name.includes('Online'))
-      ) ||
-      englishVoices.find((v) =>
-        maleKeywords.some((k) => v.name.toLowerCase().includes(k))
-      ) ||
-      englishVoices.find((v) => v.lang === 'en-GB' && !femaleKeywords.some((k) => v.name.toLowerCase().includes(k))) ||
-      englishVoices.find((v) => v.lang === 'en-US' && !femaleKeywords.some((k) => v.name.toLowerCase().includes(k))) ||
-      null;
+    // 1. First priority: English voice containing explicit male name or "male"
+    let candidateMale = englishVoices.find((v) => {
+      const name = v.name.toLowerCase();
+      const isExplicitFemale = femaleNames.some((f) => name.includes(f));
+      if (isExplicitFemale) return false;
+      return maleNames.some((m) => name.includes(m));
+    });
 
-    // Find best female English voice
+    // 2. Second priority: If no explicit male name found, pick any English voice that is NOT in femaleNames
+    if (!candidateMale) {
+      candidateMale = englishVoices.find((v) => {
+        const name = v.name.toLowerCase();
+        return !femaleNames.some((f) => name.includes(f));
+      });
+    }
+
+    this.maleVoice = candidateMale || englishVoices[0] || null;
+
+    // Pick a female voice for comparison
     this.femaleVoice =
-      englishVoices.find((v) =>
-        femaleKeywords.some((k) => v.name.toLowerCase().includes(k))
-      ) ||
-      englishVoices.find((v) => v.lang === 'en-GB') ||
+      englishVoices.find((v) => {
+        const name = v.name.toLowerCase();
+        return femaleNames.some((f) => name.includes(f));
+      }) ||
+      englishVoices.find((v) => v !== this.maleVoice) ||
       englishVoices[0] ||
       null;
   }
@@ -97,7 +130,7 @@ class TextToSpeechService {
 
   public speak(
     text: string,
-    rate: number = 0.85,
+    rate: number = 0.82,
     gender: 'male' | 'female' = 'male'
   ): Promise<void> {
     return new Promise((resolve) => {
@@ -108,28 +141,34 @@ class TextToSpeechService {
 
       this.synth.cancel(); // Stop any pending speech
 
-      if (!this.maleVoice && !this.femaleVoice) {
-        this.initVoices();
-      }
+      // Re-fetch voices in case browser loaded voices asynchronously
+      this.refreshVoices();
 
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-GB';
 
-      // 0.82 - 0.85 rate produces clear, articulate pronunciation for exam listening
-      utterance.rate = rate;
+      let targetVoice: SpeechSynthesisVoice | null = null;
 
       if (gender === 'male') {
-        if (this.maleVoice) {
-          utterance.voice = this.maleVoice;
-        }
-        // Slightly deeper pitch creates a rich, clear masculine tone
-        utterance.pitch = 0.88;
+        targetVoice = this.maleVoice;
+        // Deep masculine pitch (0.76 produces a distinctly clear male tone on any device)
+        utterance.pitch = 0.76;
       } else {
-        if (this.femaleVoice) {
-          utterance.voice = this.femaleVoice;
-        }
+        targetVoice = this.femaleVoice;
         utterance.pitch = 1.05;
       }
+
+      if (targetVoice) {
+        utterance.voice = targetVoice;
+        // CRITICAL FIX: utterance.lang MUST match the voice's lang!
+        // If they mismatch (e.g. en-GB vs en-US voice), the browser ignores the voice and falls back to default female!
+        utterance.lang = targetVoice.lang;
+      } else {
+        utterance.lang = 'en-US';
+        utterance.pitch = gender === 'male' ? 0.72 : 1.0;
+      }
+
+      // Slightly slower speed for clear exam listening
+      utterance.rate = rate;
 
       utterance.onend = () => resolve();
       utterance.onerror = () => resolve();
