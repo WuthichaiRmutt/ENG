@@ -180,6 +180,11 @@ class SoundFXService {
       // ignore
     }
   }
+
+  // Card flip / choice select sound
+  public playFlip() {
+    this.playTap();
+  }
 }
 
 export const soundFx = new SoundFXService();

@@ -64,9 +64,12 @@ export const MockExamSimulator: React.FC<MockExamSimulatorProps> = ({
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
   const [isSubmitConfirmOpen, setIsSubmitConfirmOpen] = useState(false);
 
-  // Audio playing state
+  // Audio playing & voice state
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [audioPlayCount, setAudioPlayCount] = useState<Record<string, number>>({});
+  const [voiceGender, setVoiceGender] = useState<'male' | 'female'>('male');
+  const [speechRate, setSpeechRate] = useState<number>(0.82);
+  const [showTranscript, setShowTranscript] = useState<boolean>(false);
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -170,7 +173,11 @@ export const MockExamSimulator: React.FC<MockExamSimulatorProps> = ({
   }, [examState, currentIndex, questions, isPaletteOpen, isSubmitConfirmOpen]);
 
   const handleSelectAnswer = (questionId: string, optionId: string) => {
-    soundFx.playFlip();
+    try {
+      soundFx.playTap();
+    } catch {
+      // AudioContext fallback
+    }
     setUserAnswers((prev) => ({
       ...prev,
       [questionId]: optionId,
@@ -185,7 +192,12 @@ export const MockExamSimulator: React.FC<MockExamSimulatorProps> = ({
   };
 
   const handlePlayAudio = async (text: string, qId: string) => {
-    if (isPlayingAudio) return;
+    if (isPlayingAudio) {
+      tts.stop();
+      setIsPlayingAudio(false);
+      return;
+    }
+
     setIsPlayingAudio(true);
     setAudioPlayCount((prev) => ({
       ...prev,
@@ -193,7 +205,8 @@ export const MockExamSimulator: React.FC<MockExamSimulatorProps> = ({
     }));
 
     try {
-      await tts.speak(text, 0.88);
+      // Speak with selected gender (default: natural male) and clear articulation rate (0.82)
+      await tts.speak(text, speechRate, voiceGender);
     } finally {
       setIsPlayingAudio(false);
     }
@@ -515,7 +528,7 @@ export const MockExamSimulator: React.FC<MockExamSimulatorProps> = ({
         {/* 🎧 LISTENING PLAYER PANEL */}
         {isListening && currentQ.audioText && (
           <div className="bg-gradient-to-r from-purple-900/90 via-indigo-900/90 to-slate-900 text-white p-4.5 rounded-2xl border border-purple-500/30 space-y-3 shadow-md">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center text-purple-300">
                   <Headphones className="w-4 h-4" />
@@ -526,28 +539,65 @@ export const MockExamSimulator: React.FC<MockExamSimulatorProps> = ({
                 </div>
               </div>
 
-              <span className="text-[10px] bg-white/15 px-2 py-0.5 rounded-full text-purple-200 font-medium">
-                ฟังแล้ว {audioPlayCount[currentQ.id] || 0} ครั้ง
-              </span>
+              {/* Voice Gender & Speed Controls */}
+              <div className="flex items-center gap-1.5 text-xs">
+                {/* Voice Gender Switcher */}
+                <button
+                  type="button"
+                  onClick={() => setVoiceGender((prev) => (prev === 'male' ? 'female' : 'male'))}
+                  className="bg-white/15 hover:bg-white/25 px-2.5 py-1 rounded-full text-[11px] font-bold text-white transition flex items-center gap-1"
+                  title="เปลี่ยนเสียงพากย์"
+                >
+                  <span>{voiceGender === 'male' ? '👨 เสียงผู้ชาย (แนะนำ)' : '👩 เสียงผู้หญิง'}</span>
+                </button>
+
+                {/* Speed Switcher */}
+                <button
+                  type="button"
+                  onClick={() => setSpeechRate((r) => (r === 0.82 ? 0.92 : 0.82))}
+                  className="bg-white/15 hover:bg-white/25 px-2 py-1 rounded-full text-[10px] font-black text-amber-300 transition"
+                  title="ปรับความเร็วเสียง"
+                >
+                  {speechRate === 0.82 ? '0.8x (ช้าชัด)' : '1.0x (ปกติ)'}
+                </button>
+
+                <span className="text-[10px] bg-white/15 px-2 py-0.5 rounded-full text-purple-200 font-medium">
+                  ฟังแล้ว {audioPlayCount[currentQ.id] || 0} ครั้ง
+                </span>
+              </div>
             </div>
 
             {/* Audio Button with Waves */}
             <div className="flex items-center gap-3 bg-black/30 p-3 rounded-xl border border-white/10">
               <button
+                type="button"
                 onClick={() => handlePlayAudio(currentQ.audioText!, currentQ.id)}
-                disabled={isPlayingAudio}
-                className="w-10 h-10 rounded-full bg-purple-500 hover:bg-purple-600 text-white flex items-center justify-center shadow-md active:scale-95 transition disabled:opacity-50 shrink-0"
+                className={`w-11 h-11 rounded-full text-white flex items-center justify-center shadow-md active:scale-95 transition shrink-0 ${
+                  isPlayingAudio ? 'bg-rose-500 hover:bg-rose-600' : 'bg-purple-500 hover:bg-purple-600'
+                }`}
+                title={isPlayingAudio ? 'หยุดเล่น' : 'กดเพื่อฟังเสียงโจทย์'}
               >
                 {isPlayingAudio ? (
-                  <Square className="w-4 h-4 fill-white animate-spin" />
+                  <Square className="w-4 h-4 fill-white" />
                 ) : (
-                  <Play className="w-4 h-4 fill-white ml-0.5" />
+                  <Play className="w-5 h-5 fill-white ml-0.5" />
                 )}
               </button>
 
               <div className="flex-1 min-w-0">
-                <div className="text-xs font-bold text-white flex items-center gap-2">
-                  <span>{isPlayingAudio ? 'กำลังเล่นเสียงบันทึก...' : 'กดเพื่อฟังเสียงโจทย์ (Listen Audio)'}</span>
+                <div className="text-xs font-bold text-white flex items-center justify-between">
+                  <span>
+                    {isPlayingAudio
+                      ? `กำลังเล่นเสียง (${voiceGender === 'male' ? 'เสียงผู้ชาย' : 'เสียงผู้หญิง'})...`
+                      : `กดเพื่อฟังเสียง ${voiceGender === 'male' ? 'ผู้ชาย (สำเนียงชัดเจน)' : 'ผู้หญิง'}`}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setShowTranscript((s) => !s)}
+                    className="text-[10px] text-purple-300 hover:text-white underline underline-offset-2 ml-2 shrink-0"
+                  >
+                    {showTranscript ? 'ซ่อนสคริปต์' : 'เปิดดูบทอ่าน'}
+                  </button>
                 </div>
                 {/* Visual Audio Wave animation */}
                 <div className="flex items-center gap-1 mt-1.5 h-4">
@@ -565,6 +615,13 @@ export const MockExamSimulator: React.FC<MockExamSimulatorProps> = ({
                 </div>
               </div>
             </div>
+
+            {/* Optional Transcript peek for learners */}
+            {showTranscript && (
+              <div className="bg-black/40 border border-white/10 p-2.5 rounded-xl text-[11px] text-purple-100 font-serif italic animate-fade-in">
+                "{currentQ.audioText}"
+              </div>
+            )}
           </div>
         )}
 
@@ -604,11 +661,12 @@ export const MockExamSimulator: React.FC<MockExamSimulatorProps> = ({
               return (
                 <button
                   key={opt.id}
+                  type="button"
                   onClick={() => handleSelectAnswer(currentQ.id, opt.id)}
-                  className={`w-full text-left p-3.5 rounded-2xl border transition-all flex items-center justify-between gap-3 cursor-pointer ${
+                  className={`w-full text-left p-3.5 rounded-2xl border transition-all flex items-center justify-between gap-3 cursor-pointer select-none active:scale-[0.99] ${
                     isSelected
-                      ? 'bg-indigo-50/90 dark:bg-indigo-950/50 border-indigo-600 dark:border-indigo-500 shadow-xs'
-                      : 'bg-slate-50/60 dark:bg-slate-800/40 border-slate-200/70 dark:border-slate-750 hover:bg-white dark:hover:bg-slate-850 hover:border-slate-300'
+                      ? 'bg-indigo-50/95 dark:bg-indigo-950/60 border-indigo-600 dark:border-indigo-500 shadow-xs ring-1 ring-indigo-500/30'
+                      : 'bg-slate-50/80 dark:bg-slate-800/50 border-slate-200/80 dark:border-slate-700/80 hover:bg-white dark:hover:bg-slate-800 hover:border-indigo-300'
                   }`}
                 >
                   <div className="flex items-center gap-3">
