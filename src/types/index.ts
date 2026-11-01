@@ -41,5 +41,5 @@ export interface UserProfile {
   level: number; // Current level
 }
 
-export type ActiveTab = 'dashboard' | 'flashcards' | 'games' | 'wordbank';
+export type ActiveTab = 'home' | 'dashboard' | 'flashcards' | 'games' | 'wordbank';
 export type GameMode = 'menu' | 'speed_match' | 'quiz' | 'listening' | 'cloze';

@@ -14,6 +14,7 @@ import {
   Settings,
   X,
   Target,
+  Home,
 } from 'lucide-react';
 import { UserProfile } from '../types';
 import { soundFx } from '../lib/soundFx';
@@ -26,6 +27,7 @@ interface HeaderProps {
   onOpenInstallModal?: () => void;
   isDark: boolean;
   onToggleDark: () => void;
+  onGoHome?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -36,6 +38,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenInstallModal,
   isDark,
   onToggleDark,
+  onGoHome,
 }) => {
   const [soundOn, setSoundOn] = useState(() => soundFx.isEnabled());
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -64,8 +67,12 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <header className="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200/70 dark:border-slate-800/70 transition-colors">
       <div className="max-w-4xl mx-auto px-3.5 sm:px-5 h-14 sm:h-16 flex items-center justify-between gap-3">
-        {/* Sleek Brand Logo (Single-Line, No Ugly Wrapping) */}
-        <div className="flex items-center gap-2.5 shrink-0">
+        {/* Sleek Brand Logo (Single-Line, Click to return home) */}
+        <button
+          onClick={onGoHome}
+          className="flex items-center gap-2.5 shrink-0 text-left hover:opacity-80 active:scale-98 transition-all focus:outline-none cursor-pointer"
+          title="กลับหน้าหลัก (Portal Hub)"
+        >
           <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-brand-500 flex items-center justify-center text-white shadow-sm shadow-indigo-500/30 shrink-0">
             <Sparkles className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
           </div>
@@ -80,7 +87,7 @@ export const Header: React.FC<HeaderProps> = ({
               520 คำ
             </span>
           </div>
-        </div>
+        </button>
 
         {/* Right Stats & Clean Action Controls */}
         <div className="flex items-center gap-2 shrink-0">
@@ -151,6 +158,27 @@ export const Header: React.FC<HeaderProps> = ({
                     {profile.xp || 0} XP
                   </span>
                 </div>
+
+                {/* Option 0: Return Home */}
+                {onGoHome && (
+                  <button
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      onGoHome();
+                    }}
+                    className="w-full flex items-center justify-between p-2.5 rounded-2xl hover:bg-indigo-50 dark:hover:bg-indigo-950/40 text-slate-700 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition group"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-xl bg-indigo-100 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center group-hover:scale-105 transition-transform">
+                        <Home className="w-3.5 h-3.5" />
+                      </div>
+                      <span className="font-bold">หน้าหลัก (เลือกโหมด)</span>
+                    </div>
+                    <span className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-2 py-0.5 rounded-full">
+                      Home
+                    </span>
+                  </button>
+                )}
 
                 {/* Option 1: Install App */}
                 {onOpenInstallModal && (

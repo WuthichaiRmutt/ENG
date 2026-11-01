@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { ActiveTab } from './types';
+import { Home } from 'lucide-react';
+import { ActiveTab, GameMode } from './types';
 import { useVocabStore } from './hooks/useVocabStore';
 import { Header } from './components/Header';
 import { BottomNav } from './components/BottomNav';
+import { HomePortalView } from './components/HomePortalView';
 import { DashboardView } from './components/DashboardView';
 import { FlashcardsView } from './components/FlashcardsView';
 import { GamesHubView } from './components/GamesHubView';
@@ -12,9 +14,11 @@ import { InstallAppBanner } from './components/InstallAppBanner';
 import { getStoredSupabaseConfig } from './lib/supabaseClient';
 
 export function App() {
-  const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
+  // Set root initial view to 'home' card portal
+  const [activeTab, setActiveTab] = useState<ActiveTab>('home');
   const [flashcardFilter, setFlashcardFilter] = useState<string>('all');
   const [wordbankFilter, setWordbankFilter] = useState<string>('all');
+  const [gameInitialMode, setGameInitialMode] = useState<GameMode>('menu');
   const [isCloudModalOpen, setIsCloudModalOpen] = useState(false);
   const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
 
@@ -53,12 +57,17 @@ export function App() {
     setCloudStatus,
   } = useVocabStore();
 
-  const handleNavigateTab = (tab: ActiveTab, filterMode?: string) => {
+  const handleNavigateTab = (tab: ActiveTab, filterMode?: string, gameMode?: GameMode) => {
     if (tab === 'flashcards' && filterMode) {
       setFlashcardFilter(filterMode);
     }
     if (tab === 'wordbank' && filterMode) {
       setWordbankFilter(filterMode);
+    }
+    if (gameMode) {
+      setGameInitialMode(gameMode);
+    } else if (tab === 'games') {
+      setGameInitialMode('menu');
     }
     setActiveTab(tab);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -80,6 +89,7 @@ export function App() {
         onOpenInstallModal={() => setIsInstallModalOpen(true)}
         isDark={isDark}
         onToggleDark={() => setIsDark((d) => !d)}
+        onGoHome={() => handleNavigateTab('home')}
       />
 
       {/* Main Content Area */}
@@ -90,10 +100,34 @@ export function App() {
           onCloseModal={() => setIsInstallModalOpen(false)}
         />
 
+        {/* Breadcrumb back to root portal if on inner tabs */}
+        {activeTab !== 'home' && (
+          <div className="mb-3 flex items-center justify-between">
+            <button
+              onClick={() => handleNavigateTab('home')}
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 bg-white/80 dark:bg-slate-900/80 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-800 px-3 py-1.5 rounded-xl shadow-xs transition active:scale-95"
+            >
+              <Home className="w-3.5 h-3.5" />
+              <span>← กลับหน้าหลัก (เมนูเลือกการ์ด)</span>
+            </button>
+          </div>
+        )}
+
+        {/* 1. Root Landing Page: Card Selection Portal */}
+        {activeTab === 'home' && (
+          <HomePortalView
+            stats={stats}
+            profile={profile}
+            onNavigateTab={handleNavigateTab}
+          />
+        )}
+
+        {/* 2. Vocabulary Dashboard */}
         {activeTab === 'dashboard' && (
           <DashboardView stats={stats} profile={profile} onNavigateTab={handleNavigateTab} />
         )}
 
+        {/* 3. Flashcards SRS Mode */}
         {activeTab === 'flashcards' && (
           <FlashcardsView
             words={words}
@@ -111,15 +145,19 @@ export function App() {
           />
         )}
 
+        {/* 4. Mini Games & Quiz Hub */}
         {(activeTab === 'games' || (activeTab as string) === 'quiz') && (
           <GamesHubView
+            key={gameInitialMode}
             words={words}
             profile={profile}
             onAddXP={addXP}
             onRecordResult={recordResult}
+            initialMode={gameInitialMode}
           />
         )}
 
+        {/* 5. Full Word Bank Directory */}
         {activeTab === 'wordbank' && (
           <WordBankView
             words={words}

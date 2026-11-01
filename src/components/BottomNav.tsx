@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, Layers, Gamepad2, BookOpen } from 'lucide-react';
+import { Home, LayoutDashboard, Layers, Gamepad2, BookOpen } from 'lucide-react';
 import { ActiveTab } from '../types';
 
 interface BottomNavProps {
@@ -10,10 +10,11 @@ interface BottomNavProps {
 
 export const BottomNav: React.FC<BottomNavProps> = ({ activeTab, onTabChange, focusCount }) => {
   const tabs = [
+    { id: 'home' as ActiveTab, label: 'หน้าหลัก', icon: Home },
     { id: 'dashboard' as ActiveTab, label: 'แดชบอร์ด', icon: LayoutDashboard },
-    { id: 'flashcards' as ActiveTab, label: 'แฟลชการ์ด', icon: Layers },
-    { id: 'games' as ActiveTab, label: 'ศูนย์รวมเกม', icon: Gamepad2 },
-    { id: 'wordbank' as ActiveTab, label: 'คลังคำศัพท์', icon: BookOpen },
+    { id: 'flashcards' as ActiveTab, label: 'ท่องศัพท์', icon: Layers },
+    { id: 'games' as ActiveTab, label: 'เกม/แบบฝึก', icon: Gamepad2 },
+    { id: 'wordbank' as ActiveTab, label: 'คลังศัพท์', icon: BookOpen },
   ];
 
   return (
